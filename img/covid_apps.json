@@ -1,0 +1,16 @@
+{
+	"apps": [
+		{
+			"name": "Aarogya Setu",
+			"owner": "Government of India",
+			"link": "https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en",
+			"image": "https://lh3.googleusercontent.com/2FV06dPOPcV-vupN9_9zqPn-pUUio-OzbnqktzIVCdkPcBRRtqo-k63G1DLgIeuJD1np=s100-rw"
+		},
+		{
+			"name": "UN News Reader",
+			"owner": "United Nations",
+			"link": "https://play.google.com/store/apps/details?id=org.un.mobile.news&hl=en",
+			"image": "https://lh3.googleusercontent.com/WVjcU6xT4W-oryN57_IIRrWjrV5BEtqDeJ2WfmKRC-BHR11vP8Kv29yrwGMAjrc2Xg=s180-rw"
+		}
+  ]
+}
