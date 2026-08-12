@@ -1,0 +1,363 @@
+/* nabaruns.com — hand-written, no framework, no build step. */
+
+/* ---------- fonts (self-hosted, latin subset) ---------- */
+
+@font-face {
+  font-family: 'Newsreader';
+  src: url('../fonts/newsreader-latin.woff2') format('woff2');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Newsreader';
+  src: url('../fonts/newsreader-italic-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Plex Mono';
+  src: url('../fonts/plexmono-400-latin.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Plex Mono';
+  src: url('../fonts/plexmono-500-latin.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- tokens ---------- */
+
+:root {
+  --paper: #faf8f4;
+  --ink: #171614;
+  --muted: #6b6660;
+  --rule: #e3ded4;
+  --accent: #9c3b1b;
+  --accent-soft: #c9a08c;
+
+  --serif: 'Newsreader', 'Iowan Old Style', 'Palatino Linotype', Palatino, Charter, Georgia, serif;
+  --mono: 'Plex Mono', ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  --deva: 'Noto Serif Devanagari', 'Kohinoor Devanagari', 'Devanagari MT', 'Nirmala UI', var(--serif);
+
+  --measure: 34rem;
+  --page: 44rem;
+  --gap: 2.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #14130f;
+    --ink: #e8e3d9;
+    --muted: #9a948a;
+    --rule: #2c2a24;
+    --accent: #e08a5f;
+    --accent-soft: #7a4c37;
+  }
+}
+
+/* ---------- base ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-optical-sizing: auto;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  line-height: 1.65;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-soft);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+}
+
+a:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0 0 1.15em;
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- page frame ---------- */
+
+.page {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: clamp(3rem, 9vw, 6.5rem) clamp(1.35rem, 6vw, 2.5rem) 4rem;
+}
+
+/* ---------- masthead ---------- */
+
+.masthead {
+  margin-bottom: var(--gap);
+}
+
+.masthead h1 {
+  font-size: clamp(2rem, 1.5rem + 2.2vw, 2.75rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.5rem;
+}
+
+.standfirst {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  margin-bottom: 1.35rem;
+}
+
+.elsewhere {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.15rem;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+}
+
+.elsewhere a {
+  text-decoration-color: var(--rule);
+}
+
+/* ---------- sections ---------- */
+
+section + section {
+  margin-top: var(--gap);
+}
+
+.label {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 1.6rem;
+}
+
+.lede p:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------- ledger rows ---------- */
+
+.ledger > li + li {
+  margin-top: 1.5rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  column-gap: 1.5rem;
+  row-gap: 0.15rem;
+}
+
+.row-title {
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.row-title .at {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.row-date {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  white-space: nowrap;
+  margin: 0;
+  text-align: right;
+}
+
+.row-note {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.9375em;
+  margin: 0.1rem 0 0;
+}
+
+/* the current thing: given room to breathe */
+
+.feature .row-note {
+  color: var(--ink);
+  font-size: 1em;
+  margin-top: 0.6rem;
+}
+
+.feature .row-note + .row-note {
+  color: var(--muted);
+  font-size: 0.9375em;
+  margin-top: 0.65rem;
+}
+
+/* two-column name / gloss list, for the products */
+
+.gloss {
+  margin-top: 1.35rem;
+  border-top: 1px solid var(--rule);
+}
+
+.gloss li {
+  display: grid;
+  grid-template-columns: minmax(0, 11rem) 1fr;
+  column-gap: 1.5rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.gloss .name {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  align-self: center;
+}
+
+.gloss .what {
+  color: var(--muted);
+  font-size: 0.9375em;
+  align-self: center;
+}
+
+/* ---------- footer ---------- */
+
+.colophon {
+  margin-top: calc(var(--gap) * 1.4);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  line-height: 1.75;
+  color: var(--muted);
+}
+
+.colophon p {
+  max-width: none;
+  margin: 0;
+}
+
+.verse {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+}
+
+.verse .sa {
+  font-family: var(--deva);
+  font-size: 1.0625rem;
+  line-height: 1.9;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.verse .en {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1rem;
+  display: block;
+}
+
+.verse cite {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- narrow ---------- */
+
+@media (max-width: 34rem) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .row-date {
+    text-align: left;
+    order: -1;
+    margin-bottom: 0.2rem;
+  }
+
+  .gloss li {
+    grid-template-columns: 1fr;
+    row-gap: 0.1rem;
+  }
+}
+
+/* ---------- print ---------- */
+
+@media print {
+  :root {
+    --paper: #fff;
+    --ink: #000;
+    --muted: #444;
+    --rule: #ccc;
+    --accent: #000;
+  }
+
+  .page {
+    max-width: none;
+    padding: 0;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
