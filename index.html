@@ -43,7 +43,7 @@
         <h1>Nabarun Sarkar</h1>
         <p class="standfirst">Cofounder &amp; CTO at <a href="https://cruq.ai">Cruq&nbsp;AI</a> &middot; Dubai, UAE</p>
         <nav class="elsewhere" aria-label="Contact and profiles">
-          <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x6e;&#x61;&#x62;&#x73;&#x61;&#x72;&#x6b;&#x61;&#x72;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;">&#x6e;&#x61;&#x62;&#x73;&#x61;&#x72;&#x6b;&#x61;&#x72;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a>
+          <button type="button" class="reveal" data-a="b9LxY1QJaJcJb=" data-b="WjmpWnHh3h2hg=" hidden>Email</button>
           <a href="https://github.com/nabaruns" rel="me">GitHub</a>
           <a href="https://www.linkedin.com/in/nabaruns/" rel="me">LinkedIn</a>
           <a href="https://x.com/nbrsr" rel="me">X</a>
@@ -217,6 +217,23 @@
   </script>
 
   <script>
+    // The address is never in the markup — it is assembled only after a real click,
+    // so parsers and JS-rendering crawlers that do not interact never see it.
+    const rev = document.querySelector('.reveal');
+    if (rev) {
+      rev.hidden = false;
+      rev.addEventListener('click', () => {
+        const a = rev.dataset.a, b = rev.dataset.b;
+        const addr = atob([...a].map((c, i) => c + (b[i] || '')).join(''))
+          .split('').reverse().join('');
+        const link = document.createElement('a');
+        link.href = 'ma' + 'ilto:' + addr;
+        link.textContent = addr;
+        rev.replaceWith(link);
+        link.focus();
+      }, { once: true });
+    }
+
     const qrBtn = document.querySelector('.qr-open');
     const qrDlg = document.getElementById('qr-dialog');
     if (qrBtn && qrDlg && qrDlg.showModal) {

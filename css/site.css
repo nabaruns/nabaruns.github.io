@@ -188,7 +188,8 @@ ul {
 
 /* ---------- QR ---------- */
 
-.qr-open {
+.qr-open,
+.reveal {
   font: inherit;
   color: inherit;
   background: none;
@@ -202,12 +203,14 @@ ul {
   transition: color 120ms ease, text-decoration-color 120ms ease;
 }
 
-.qr-open:hover {
+.qr-open:hover,
+.reveal:hover {
   color: var(--accent);
   text-decoration-color: var(--accent);
 }
 
 .qr-open:focus-visible,
+.reveal:focus-visible,
 .qr-close:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
