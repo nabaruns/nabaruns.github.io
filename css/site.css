@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: 'Newsreader';
-  src: url('../fonts/newsreader-latin.woff2') format('woff2');
+  src: url('../fonts/newsreader-latin.woff2?v=2') format('woff2');
   font-weight: 400 600;
   font-style: normal;
   font-display: swap;
@@ -12,7 +12,7 @@
 
 @font-face {
   font-family: 'Newsreader';
-  src: url('../fonts/newsreader-italic-latin.woff2') format('woff2');
+  src: url('../fonts/newsreader-italic-latin.woff2?v=2') format('woff2');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -20,7 +20,7 @@
 
 @font-face {
   font-family: 'Plex Mono';
-  src: url('../fonts/plexmono-400-latin.woff2') format('woff2');
+  src: url('../fonts/plexmono-400-latin.woff2?v=2') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -28,7 +28,7 @@
 
 @font-face {
   font-family: 'Plex Mono';
-  src: url('../fonts/plexmono-500-latin.woff2') format('woff2');
+  src: url('../fonts/plexmono-500-latin.woff2?v=2') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -190,7 +190,6 @@ ul {
 
 .qr-open,
 .reveal,
-.draw-toggle,
 .draw-clear {
   font: inherit;
   color: inherit;
@@ -207,7 +206,6 @@ ul {
 
 .qr-open:hover,
 .reveal:hover,
-.draw-toggle:hover,
 .draw-clear:hover {
   color: var(--accent);
   text-decoration-color: var(--accent);
@@ -215,16 +213,10 @@ ul {
 
 .qr-open:focus-visible,
 .reveal:focus-visible,
-.draw-toggle:focus-visible,
 .draw-clear:focus-visible,
 .qr-close:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
-}
-
-.draw-toggle[aria-pressed="true"] {
-  color: var(--accent);
-  text-decoration-color: var(--accent);
 }
 
 /* ---------- doodle layer ---------- */
@@ -516,7 +508,6 @@ section + section {
   /* the overlay is one tall canvas — it cannot survive page breaks */
   .doodle,
   .qr-open,
-  .draw-toggle,
   .draw-clear {
     display: none;
   }

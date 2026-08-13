@@ -6,6 +6,16 @@ JavaScript. Fonts (Newsreader, IBM Plex Mono) are self-hosted from `fonts/`, sub
 Served by GitHub Pages at <https://nabaruns.com>. The blog lives separately at
 <https://nabaruns.com/blog>.
 
+## Caching
+
+GitHub Pages serves HTML with `max-age=600` but CSS, JS and fonts with `max-age=14400` — four
+hours. A returning visitor therefore gets new HTML against stale assets, which silently breaks
+anything that depends on both changing together.
+
+So asset URLs carry a `?v=N` token. **Bump it in `index.html` and `css/site.css` together
+whenever you change `site.css`, `site.js` or a font file** — the two files must agree, or a
+preloaded font is fetched twice.
+
 | Path | |
 | --- | --- |
 | `index.html` | the site |
