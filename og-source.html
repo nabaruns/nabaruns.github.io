@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  @font-face {
+    font-family: 'Newsreader';
+    src: url('/fonts/newsreader-latin.woff2') format('woff2');
+    font-weight: 400 600; font-style: normal;
+  }
+  @font-face {
+    font-family: 'Plex Mono';
+    src: url('/fonts/plexmono-400-latin.woff2') format('woff2');
+    font-weight: 400; font-style: normal;
+  }
+  @font-face {
+    font-family: 'Plex Mono';
+    src: url('/fonts/plexmono-500-latin.woff2') format('woff2');
+    font-weight: 500; font-style: normal;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    background: #faf8f4;
+    color: #171614;
+    font-family: 'Newsreader', Georgia, serif;
+    font-optical-sizing: auto;
+    padding: 84px 96px 76px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1 {
+    font-size: 104px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .role {
+    font-family: 'Plex Mono', monospace;
+    font-size: 25px;
+    color: #6b6660;
+    letter-spacing: 0.01em;
+    margin-top: 26px;
+  }
+  .lede {
+    font-size: 38px;
+    line-height: 1.45;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+  footer {
+    border-top: 1px solid #e3ded4;
+    padding-top: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'Plex Mono', monospace;
+    font-size: 24px;
+  }
+  .site { color: #9c3b1b; }
+  .where { color: #6b6660; font-size: 21px; letter-spacing: 0.05em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+  <div>
+    <h1>Nabarun Sarkar</h1>
+    <p class="role">Cofounder &amp; CTO at Cruq AI</p>
+  </div>
+
+  <p class="lede">Machine learning, agent infrastructure and blockchain.</p>
+
+  <footer>
+    <span class="site">nabaruns.com</span>
+    <span class="where">Dubai, UAE</span>
+  </footer>
+</body>
+</html>
