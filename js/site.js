@@ -32,17 +32,19 @@
   }
 
   /* ---------- margin doodles ---------- */
-  // A scribble layer over the page. Kept to fine pointers so it can never
-  // swallow a touch scroll, and stored per tab so it survives a reload but
-  // never outlives the session.
+  // The pencil is always live: drag anywhere and you leave a mark. Marks are
+  // stored per tab, so they survive a reload but never outlive the session.
+  // Restricted to fine pointers — on touch, a drag has to stay a scroll.
 
-  const drawBtn = document.querySelector('.draw-toggle');
   const clearBtn = document.querySelector('.draw-clear');
   const finePointer = matchMedia('(any-pointer: fine)').matches;
-  if (!drawBtn || !clearBtn || !finePointer) return;
+  if (!clearBtn || !finePointer) return;
+
+  // anything a reader might legitimately click, select or focus is left alone
+  const INTERACTIVE = 'a, button, input, textarea, select, summary, label, dialog';
 
   const KEY = 'ns-doodle';
-  let canvas = null, ctx = null, strokes = [], current = null, active = false;
+  let canvas = null, ctx = null, strokes = [], current = null;
 
   const docW = () => Math.max(document.documentElement.scrollWidth, innerWidth);
   const docH = () => Math.max(document.documentElement.scrollHeight, innerHeight);
@@ -70,10 +72,6 @@
     size();
     addEventListener('resize', size);
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paint);
-    canvas.addEventListener('pointerdown', down);
-    canvas.addEventListener('pointermove', move);
-    addEventListener('pointerup', up);
-    addEventListener('pointercancel', up);
   }
 
   function size() {
@@ -113,11 +111,12 @@
   const at = e => [Math.round(e.pageX * 10) / 10, Math.round(e.pageY * 10) / 10];
 
   function down(e) {
-    if (!active || e.button !== 0) return;
-    e.preventDefault();
+    if (e.button !== 0 || e.pointerType === 'touch') return;
+    if (e.target.closest(INTERACTIVE)) return;   // let links and controls behave
+    e.preventDefault();                          // and suppress the text selection
+    build();
     current = [at(e)];
     strokes.push(current);
-    canvas.setPointerCapture(e.pointerId);
     paint();
   }
 
@@ -137,33 +136,25 @@
   }
 
   function sync() {
-    drawBtn.textContent = active ? 'Stop' : 'Draw';
-    drawBtn.setAttribute('aria-pressed', String(active));
-    clearBtn.hidden = !(active || strokes.length);
-    document.body.classList.toggle('drawing', active);
+    clearBtn.hidden = !strokes.length;
   }
-
-  drawBtn.hidden = false;
-  drawBtn.addEventListener('click', () => {
-    active = !active;
-    if (active) build();
-    sync();
-  });
 
   clearBtn.addEventListener('click', () => {
     strokes = [];
     current = null;
     save();
-    paint();
+    if (ctx) paint();
     sync();
   });
 
-  addEventListener('keydown', e => {
-    if (e.key === 'Escape' && active) { active = false; sync(); }
-  });
+  document.addEventListener('pointerdown', down);
+  addEventListener('pointermove', move);
+  addEventListener('pointerup', up);
+  addEventListener('pointercancel', up);
+  document.body.classList.add('can-draw');
 
   // restore anything drawn earlier this session
   strokes = load();
-  if (strokes.length) { build(); }
+  if (strokes.length) { build(); paint(); }
   sync();
 })();

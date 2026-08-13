@@ -237,15 +237,17 @@ ul {
   pointer-events: none;
 }
 
-/* pencil, hotspot at the tip */
-body.drawing .doodle {
-  pointer-events: auto;
+/* the pencil is the default cursor once the layer is live (fine pointers, JS on),
+   hotspot at the tip; anything clickable keeps its own cursor */
+body.can-draw {
   cursor: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M3 25l1.4-4.6L18 6.8l3.2 3.2L7.6 23.6z' fill='%23e8b9a6' stroke='%23171614' stroke-width='1.3' stroke-linejoin='round'/%3E%3Cpath d='M3 25l1.4-4.6 1.6 1.6 1.6 1.6z' fill='%23171614'/%3E%3Cpath d='M19.4 5.4l2-2a1.7 1.7 0 0 1 2.4 0l.8.8a1.7 1.7 0 0 1 0 2.4l-2 2z' fill='%239c3b1b' stroke='%23171614' stroke-width='1.3' stroke-linejoin='round'/%3E%3C/svg%3E") 3 25, crosshair;
 }
 
-body.drawing {
-  user-select: none;
-  -webkit-user-select: none;
+body.can-draw a,
+body.can-draw button,
+body.can-draw summary,
+body.can-draw label {
+  cursor: pointer;
 }
 
 .qr-dialog {
