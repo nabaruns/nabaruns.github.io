@@ -35,14 +35,21 @@
   <main class="page">
 
     <header class="masthead">
-      <h1>Nabarun Sarkar</h1>
-      <p class="standfirst">Cofounder &amp; CTO at <a href="https://cruq.ai">Cruq&nbsp;AI</a> &middot; Dubai, UAE</p>
-      <nav class="elsewhere" aria-label="Contact and profiles">
-        <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x6e;&#x61;&#x62;&#x73;&#x61;&#x72;&#x6b;&#x61;&#x72;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;">&#x6e;&#x61;&#x62;&#x73;&#x61;&#x72;&#x6b;&#x61;&#x72;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a>
-        <a href="https://github.com/nabaruns" rel="me">GitHub</a>
-        <a href="https://www.linkedin.com/in/nabaruns/" rel="me">LinkedIn</a>
-        <a href="https://x.com/nbrsr" rel="me">X</a>
-      </nav>
+      <picture>
+        <source type="image/webp" srcset="/img/portrait-112.webp 1x, /img/portrait-224.webp 2x, /img/portrait-336.webp 3x">
+        <img class="portrait" src="/img/portrait-224.jpg" width="112" height="112" alt="Nabarun Sarkar" fetchpriority="high" decoding="async">
+      </picture>
+      <div class="identity">
+        <h1>Nabarun Sarkar</h1>
+        <p class="standfirst">Cofounder &amp; CTO at <a href="https://cruq.ai">Cruq&nbsp;AI</a> &middot; Dubai, UAE</p>
+        <nav class="elsewhere" aria-label="Contact and profiles">
+          <a href="&#x6d;&#x61;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#x6e;&#x61;&#x62;&#x73;&#x61;&#x72;&#x6b;&#x61;&#x72;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;">&#x6e;&#x61;&#x62;&#x73;&#x61;&#x72;&#x6b;&#x61;&#x72;&#x40;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a>
+          <a href="https://github.com/nabaruns" rel="me">GitHub</a>
+          <a href="https://www.linkedin.com/in/nabaruns/" rel="me">LinkedIn</a>
+          <a href="https://x.com/nbrsr" rel="me">X</a>
+          <button type="button" class="qr-open" aria-haspopup="dialog" hidden>QR</button>
+        </nav>
+      </div>
     </header>
 
     <section class="lede" aria-label="Introduction">
@@ -175,6 +182,15 @@
       <p>Set in Newsreader and IBM Plex Mono. Hand-written HTML, no frameworks, no trackers.</p>
     </footer>
 
+    <dialog class="qr-dialog" id="qr-dialog" aria-labelledby="qr-title">
+      <div class="qr-body">
+        <p class="qr-title" id="qr-title">Open this page on your phone</p>
+        <div class="qr-code"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 29 29" shape-rendering="crispEdges" role="img" aria-label="QR code for nabaruns.com"><path fill="currentColor" d="M2 2h7v1h-7zM11 2h1v1h-1zM14 2h3v1h-3zM20 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM15 3h1v1h-1zM20 3h1v1h-1zM26 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM16 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM22 4h3v1h-3zM26 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM15 5h1v1h-1zM17 5h2v1h-2zM20 5h1v1h-1zM22 5h3v1h-3zM26 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h1v1h-1zM15 6h1v1h-1zM20 6h1v1h-1zM22 6h3v1h-3zM26 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h1v1h-1zM14 7h3v1h-3zM18 7h1v1h-1zM20 7h1v1h-1zM26 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h7v1h-7zM10 9h1v1h-1zM16 9h2v1h-2zM2 10h1v1h-1zM8 10h1v1h-1zM10 10h1v1h-1zM12 10h9v1h-9zM23 10h3v1h-3zM6 11h2v1h-2zM9 11h1v1h-1zM14 11h4v1h-4zM21 11h5v1h-5zM4 12h1v1h-1zM7 12h3v1h-3zM11 12h2v1h-2zM14 12h1v1h-1zM16 12h2v1h-2zM20 12h1v1h-1zM22 12h2v1h-2zM25 12h2v1h-2zM3 13h1v1h-1zM10 13h1v1h-1zM13 13h1v1h-1zM16 13h8v1h-8zM26 13h1v1h-1zM5 14h1v1h-1zM7 14h3v1h-3zM11 14h1v1h-1zM15 14h2v1h-2zM18 14h1v1h-1zM20 14h2v1h-2zM26 14h1v1h-1zM2 15h1v1h-1zM4 15h3v1h-3zM10 15h3v1h-3zM14 15h2v1h-2zM17 15h2v1h-2zM21 15h1v1h-1zM25 15h1v1h-1zM2 16h1v1h-1zM5 16h2v1h-2zM8 16h2v1h-2zM15 16h4v1h-4zM20 16h4v1h-4zM25 16h2v1h-2zM2 17h1v1h-1zM4 17h3v1h-3zM10 17h3v1h-3zM14 17h3v1h-3zM21 17h1v1h-1zM23 17h2v1h-2zM26 17h1v1h-1zM2 18h1v1h-1zM4 18h5v1h-5zM10 18h3v1h-3zM14 18h1v1h-1zM16 18h7v1h-7zM24 18h1v1h-1zM10 19h3v1h-3zM17 19h2v1h-2zM22 19h1v1h-1zM2 20h7v1h-7zM12 20h1v1h-1zM14 20h3v1h-3zM18 20h1v1h-1zM20 20h1v1h-1zM22 20h1v1h-1zM26 20h1v1h-1zM2 21h1v1h-1zM8 21h1v1h-1zM13 21h1v1h-1zM16 21h3v1h-3zM22 21h1v1h-1zM26 21h1v1h-1zM2 22h1v1h-1zM4 22h3v1h-3zM8 22h1v1h-1zM12 22h2v1h-2zM17 22h6v1h-6zM24 22h3v1h-3zM2 23h1v1h-1zM4 23h3v1h-3zM8 23h1v1h-1zM11 23h2v1h-2zM14 23h2v1h-2zM19 23h2v1h-2zM25 23h2v1h-2zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h1v1h-1zM15 24h3v1h-3zM23 24h2v1h-2zM26 24h1v1h-1zM2 25h1v1h-1zM8 25h1v1h-1zM12 25h1v1h-1zM14 25h2v1h-2zM17 25h2v1h-2zM20 25h3v1h-3zM26 25h1v1h-1zM2 26h7v1h-7zM10 26h1v1h-1zM13 26h3v1h-3zM18 26h1v1h-1zM20 26h1v1h-1zM23 26h1v1h-1zM26 26h1v1h-1z"/></svg></div>
+        <p class="qr-url">nabaruns.com</p>
+        <form method="dialog"><button class="qr-close">Close</button></form>
+      </div>
+    </dialog>
+
   </main>
 
   <script type="application/ld+json">
@@ -183,7 +199,7 @@
     "@type": "Person",
     "name": "Nabarun Sarkar",
     "url": "https://nabaruns.com/",
-    "image": "https://nabaruns.com/img/profile.jpg",
+    "image": "https://nabaruns.com/img/portrait-224.jpg",
     "jobTitle": "Cofounder & CTO",
     "worksFor": { "@type": "Organization", "name": "Cruq AI", "url": "https://cruq.ai" },
     "address": { "@type": "PostalAddress", "addressLocality": "Dubai", "addressCountry": "AE" },
@@ -198,6 +214,16 @@
       "https://x.com/nbrsr"
     ]
   }
+  </script>
+
+  <script>
+    const qrBtn = document.querySelector('.qr-open');
+    const qrDlg = document.getElementById('qr-dialog');
+    if (qrBtn && qrDlg && qrDlg.showModal) {
+      qrBtn.hidden = false;
+      qrBtn.addEventListener('click', () => qrDlg.showModal());
+      qrDlg.addEventListener('click', e => { if (e.target === qrDlg) qrDlg.close(); });
+    }
   </script>
 
 </body>
