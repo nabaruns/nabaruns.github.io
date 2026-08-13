@@ -48,6 +48,8 @@
           <a href="https://www.linkedin.com/in/nabaruns/" rel="me">LinkedIn</a>
           <a href="https://x.com/nbrsr" rel="me">X</a>
           <button type="button" class="qr-open" aria-haspopup="dialog" hidden>QR</button>
+          <button type="button" class="draw-toggle" aria-pressed="false" hidden>Draw</button>
+          <button type="button" class="draw-clear" hidden>Clear</button>
         </nav>
       </div>
     </header>
@@ -216,32 +218,7 @@
   }
   </script>
 
-  <script>
-    // The address is never in the markup — it is assembled only after a real click,
-    // so parsers and JS-rendering crawlers that do not interact never see it.
-    const rev = document.querySelector('.reveal');
-    if (rev) {
-      rev.hidden = false;
-      rev.addEventListener('click', () => {
-        const a = rev.dataset.a, b = rev.dataset.b;
-        const addr = atob([...a].map((c, i) => c + (b[i] || '')).join(''))
-          .split('').reverse().join('');
-        const link = document.createElement('a');
-        link.href = 'ma' + 'ilto:' + addr;
-        link.textContent = addr;
-        rev.replaceWith(link);
-        link.focus();
-      }, { once: true });
-    }
-
-    const qrBtn = document.querySelector('.qr-open');
-    const qrDlg = document.getElementById('qr-dialog');
-    if (qrBtn && qrDlg && qrDlg.showModal) {
-      qrBtn.hidden = false;
-      qrBtn.addEventListener('click', () => qrDlg.showModal());
-      qrDlg.addEventListener('click', e => { if (e.target === qrDlg) qrDlg.close(); });
-    }
-  </script>
+  <script src="/js/site.js" defer></script>
 
 </body>
 

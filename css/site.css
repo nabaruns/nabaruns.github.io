@@ -189,7 +189,9 @@ ul {
 /* ---------- QR ---------- */
 
 .qr-open,
-.reveal {
+.reveal,
+.draw-toggle,
+.draw-clear {
   font: inherit;
   color: inherit;
   background: none;
@@ -204,16 +206,46 @@ ul {
 }
 
 .qr-open:hover,
-.reveal:hover {
+.reveal:hover,
+.draw-toggle:hover,
+.draw-clear:hover {
   color: var(--accent);
   text-decoration-color: var(--accent);
 }
 
 .qr-open:focus-visible,
 .reveal:focus-visible,
+.draw-toggle:focus-visible,
+.draw-clear:focus-visible,
 .qr-close:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
+}
+
+.draw-toggle[aria-pressed="true"] {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* ---------- doodle layer ---------- */
+
+.doodle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* pencil, hotspot at the tip */
+body.drawing .doodle {
+  pointer-events: auto;
+  cursor: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M3 25l1.4-4.6L18 6.8l3.2 3.2L7.6 23.6z' fill='%23e8b9a6' stroke='%23171614' stroke-width='1.3' stroke-linejoin='round'/%3E%3Cpath d='M3 25l1.4-4.6 1.6 1.6 1.6 1.6z' fill='%23171614'/%3E%3Cpath d='M19.4 5.4l2-2a1.7 1.7 0 0 1 2.4 0l.8.8a1.7 1.7 0 0 1 0 2.4l-2 2z' fill='%239c3b1b' stroke='%23171614' stroke-width='1.3' stroke-linejoin='round'/%3E%3C/svg%3E") 3 25, crosshair;
+}
+
+body.drawing {
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .qr-dialog {
@@ -477,5 +509,13 @@ section + section {
 
   a {
     text-decoration: none;
+  }
+
+  /* the overlay is one tall canvas — it cannot survive page breaks */
+  .doodle,
+  .qr-open,
+  .draw-toggle,
+  .draw-clear {
+    display: none;
   }
 }
