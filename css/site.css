@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: 'Newsreader';
-  src: url('../fonts/newsreader-latin.woff2?v=4') format('woff2');
+  src: url('../fonts/newsreader-latin.woff2?v=5') format('woff2');
   font-weight: 400 600;
   font-style: normal;
   font-display: swap;
@@ -12,7 +12,7 @@
 
 @font-face {
   font-family: 'Newsreader';
-  src: url('../fonts/newsreader-italic-latin.woff2?v=4') format('woff2');
+  src: url('../fonts/newsreader-italic-latin.woff2?v=5') format('woff2');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -20,7 +20,7 @@
 
 @font-face {
   font-family: 'Plex Mono';
-  src: url('../fonts/plexmono-400-latin.woff2?v=4') format('woff2');
+  src: url('../fonts/plexmono-400-latin.woff2?v=5') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -28,7 +28,7 @@
 
 @font-face {
   font-family: 'Plex Mono';
-  src: url('../fonts/plexmono-500-latin.woff2?v=4') format('woff2');
+  src: url('../fonts/plexmono-500-latin.woff2?v=5') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -195,13 +195,6 @@ ul {
   gap: 0.45rem 0.9rem;
   margin: 0.85rem 0 0;
   max-width: none;
-}
-
-.channels-label {
-  font-family: var(--mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.01em;
-  color: var(--muted);
 }
 
 .channels a {
