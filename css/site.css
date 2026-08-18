@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: 'Newsreader';
-  src: url('../fonts/newsreader-latin.woff2?v=2') format('woff2');
+  src: url('../fonts/newsreader-latin.woff2?v=3') format('woff2');
   font-weight: 400 600;
   font-style: normal;
   font-display: swap;
@@ -12,7 +12,7 @@
 
 @font-face {
   font-family: 'Newsreader';
-  src: url('../fonts/newsreader-italic-latin.woff2?v=2') format('woff2');
+  src: url('../fonts/newsreader-italic-latin.woff2?v=3') format('woff2');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -20,7 +20,7 @@
 
 @font-face {
   font-family: 'Plex Mono';
-  src: url('../fonts/plexmono-400-latin.woff2?v=2') format('woff2');
+  src: url('../fonts/plexmono-400-latin.woff2?v=3') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -28,7 +28,7 @@
 
 @font-face {
   font-family: 'Plex Mono';
-  src: url('../fonts/plexmono-500-latin.woff2?v=2') format('woff2');
+  src: url('../fonts/plexmono-500-latin.woff2?v=3') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -393,6 +393,19 @@ section + section {
 .gloss {
   margin-top: 1.35rem;
   border-top: 1px solid var(--rule);
+}
+
+/* a gloss sitting directly under a section label: the label's own rule already
+   separates it, so drop the duplicate top border and gap */
+.gloss.flush {
+  margin-top: 0;
+  border-top: 0;
+}
+
+/* handles are identifiers, not prose — set them like the domains above */
+.gloss.handles .what {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
 }
 
 .gloss li {
