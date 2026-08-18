@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: 'Newsreader';
-  src: url('../fonts/newsreader-latin.woff2?v=3') format('woff2');
+  src: url('../fonts/newsreader-latin.woff2?v=4') format('woff2');
   font-weight: 400 600;
   font-style: normal;
   font-display: swap;
@@ -12,7 +12,7 @@
 
 @font-face {
   font-family: 'Newsreader';
-  src: url('../fonts/newsreader-italic-latin.woff2?v=3') format('woff2');
+  src: url('../fonts/newsreader-italic-latin.woff2?v=4') format('woff2');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -20,7 +20,7 @@
 
 @font-face {
   font-family: 'Plex Mono';
-  src: url('../fonts/plexmono-400-latin.woff2?v=3') format('woff2');
+  src: url('../fonts/plexmono-400-latin.woff2?v=4') format('woff2');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -28,7 +28,7 @@
 
 @font-face {
   font-family: 'Plex Mono';
-  src: url('../fonts/plexmono-500-latin.woff2?v=3') format('woff2');
+  src: url('../fonts/plexmono-500-latin.woff2?v=4') format('woff2');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -184,6 +184,47 @@ ul {
 
 .elsewhere a {
   text-decoration-color: var(--rule);
+}
+
+/* codev.ai channels: icon row under the contact links */
+
+.channels {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.9rem;
+  margin: 0.85rem 0 0;
+  max-width: none;
+}
+
+.channels-label {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+
+.channels a {
+  display: inline-flex;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 120ms ease;
+}
+
+.channels a:hover {
+  color: var(--accent);
+}
+
+.channels a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.channels svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+  fill: currentColor;
 }
 
 /* ---------- QR ---------- */
@@ -393,19 +434,6 @@ section + section {
 .gloss {
   margin-top: 1.35rem;
   border-top: 1px solid var(--rule);
-}
-
-/* a gloss sitting directly under a section label: the label's own rule already
-   separates it, so drop the duplicate top border and gap */
-.gloss.flush {
-  margin-top: 0;
-  border-top: 0;
-}
-
-/* handles are identifiers, not prose — set them like the domains above */
-.gloss.handles .what {
-  font-family: var(--mono);
-  font-size: 0.8125rem;
 }
 
 .gloss li {
