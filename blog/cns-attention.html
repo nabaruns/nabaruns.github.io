@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>The machinery of attention — Nabarun Sarkar</title>
+  <meta name="description" content="A summary of the selected papers from Sridharan Devarajan's Cognition, Computation and Behavior Lab at IISc's Centre for Neuroscience: the components of attention, expectation and reward, and deep learning for medical images.">
+  <meta name="author" content="Nabarun Sarkar">
+  <link rel="canonical" href="https://nabaruns.com/blog/cns-attention.html">
+
+  <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The machinery of attention: a reading list from IISc's Centre for Neuroscience">
+  <meta property="og:description" content="The components of attention, expectation and reward, and deep learning for medical images.">
+  <meta property="og:url" content="https://nabaruns.com/blog/cns-attention.html">
+  <meta property="og:image" content="https://nabaruns.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@nbrsr">
+
+  <link rel="preload" href="/fonts/newsreader-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/plexmono-400-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css?v=5">
+  <link rel="stylesheet" href="/css/blog.css?v=2">
+</head>
+
+<body>
+
+  <main class="page">
+
+    <a class="backlink" href="/blog/">&larr; Writing</a>
+
+    <article>
+
+      <div class="post-hero" aria-hidden="true">
+        <svg viewBox="0 0 1000 380" role="img" preserveAspectRatio="xMidYMid meet">
+          <!-- brain, in profile -->
+          <g fill="var(--paper)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <ellipse cx="235" cy="162" rx="100" ry="74"/>
+            <path d="M232 234 q -4 22 8 32" fill="none"/>
+          </g>
+          <g fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="round">
+            <path d="M168 116 q 18 -16 38 -2 t 40 -2 t 30 4"/>
+            <path d="M150 152 q 22 -18 44 0 t 44 0 t 44 0"/>
+            <path d="M158 190 q 22 -16 44 0 t 44 0 t 40 -2"/>
+          </g>
+
+          <!-- spotlight of attention, from the front of the brain -->
+          <path d="M332 146 L575 296 L835 296 Z" fill="var(--accent)" fill-opacity="0.09"
+                stroke="var(--accent-soft)" stroke-width="1.5" stroke-dasharray="3 6" stroke-linejoin="round"/>
+          <circle cx="332" cy="146" r="5" fill="var(--accent)"/>
+
+          <!-- ground line + candidate targets -->
+          <line x1="560" y1="296" x2="850" y2="296" stroke="var(--rule)" stroke-width="1"/>
+          <g fill="var(--paper)" stroke="var(--ink)" stroke-width="3">
+            <circle cx="615" cy="296" r="12"/>
+            <circle cx="785" cy="296" r="12"/>
+          </g>
+          <!-- the selected target -->
+          <circle cx="700" cy="296" r="12" fill="var(--accent)" stroke="var(--accent)"/>
+          <g stroke="var(--accent)" stroke-width="2" fill="none">
+            <circle cx="700" cy="296" r="23"/>
+            <line x1="700" y1="262" x2="700" y2="270"/>
+            <line x1="700" y1="322" x2="700" y2="330"/>
+            <line x1="666" y1="296" x2="674" y2="296"/>
+            <line x1="726" y1="296" x2="734" y2="296"/>
+          </g>
+
+          <!-- whole-slide image tiles, one sampled -->
+          <g stroke="var(--rule)" stroke-width="1.5" fill="none">
+            <rect x="858" y="52" width="26" height="26"/>
+            <rect x="888" y="52" width="26" height="26"/>
+            <rect x="918" y="52" width="26" height="26"/>
+            <rect x="858" y="82" width="26" height="26"/>
+            <rect x="888" y="82" width="26" height="26"/>
+            <rect x="918" y="82" width="26" height="26"/>
+            <rect x="858" y="112" width="26" height="26"/>
+            <rect x="888" y="112" width="26" height="26"/>
+            <rect x="918" y="112" width="26" height="26"/>
+          </g>
+          <rect x="888" y="82" width="26" height="26" fill="var(--accent)" fill-opacity="0.85"/>
+
+          <!-- an EEG-ish trace along the base -->
+          <polyline fill="none" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"
+            points="60,350 200,350 226,350 244,326 258,366 274,340 300,350 430,350 452,330 464,364 480,342 512,350 618,350 640,332 652,366 668,344 700,350 940,350"/>
+        </svg>
+      </div>
+
+      <header class="post-head">
+        <p class="post-meta">
+          <span class="post-badge">Neuroscience</span>
+          <span>Research summary</span>
+          <span class="dot">&middot;</span>
+          <span>2026</span>
+          <span class="dot">&middot;</span>
+          <span>8 min read</span>
+        </p>
+        <h1 class="post-title">The machinery of attention: a reading list from IISc&rsquo;s Centre for Neuroscience</h1>
+        <p class="post-standfirst">Sridharan Devarajan&rsquo;s <a href="https://cns.iisc.ac.in/sridhar/">Cognition, Computation and Behavior Lab</a> at IISc studies how the brain decides what to attend to, with fMRI, EEG, TMS and primate electrophysiology, and builds deep-learning models for medical imaging with Google Research. It is also the lab I spent a year in, working on brain-age estimation from MRI. Here are the seven selected papers from his profile, summarized and linked.</p>
+      </header>
+
+      <div class="prose">
+
+        <p>One idea runs through most of this work. A behavioural response, deciding whether a target was there, can be split into two independent quantities: perceptual <em>sensitivity</em>, how well you actually saw it, and choice <em>bias</em>, how willing you were to say yes. The lab uses signal detection theory to pull these apart, then asks which one attention, expectation or reward is really moving, and where in the brain each lives. The answers turn out to be surprisingly separable.</p>
+
+        <h2 id="components">Two components of attention: sensitivity and bias</h2>
+        <ul class="papers">
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://elifesciences.org/articles/97098">Distinct neural bases of subcomponents of the attentional blink</a></h3>
+            <p class="paper-venue">eLife&rsquo;24</p>
+            <p class="paper-note">When two targets arrive in quick succession the second is often missed, the attentional blink. Using a multialternative task and a signal detection model, the blink is shown to cut perceptual sensitivity while leaving choice bias intact, with parieto-occipital N2p and P3 amplitudes tracking the detection deficit and long-range high-beta (20&ndash;30 Hz) frontoparietal coherence tracking the discrimination deficit.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://www.science.org/doi/10.1126/sciadv.adi0645">Dissociable components of attention exhibit distinct neuronal signatures in primate visual cortex</a></h3>
+            <p class="paper-venue">Science Advances&rsquo;24</p>
+            <p class="paper-note">In monkeys performing a task that separates where the eyes plan to move from where covert attention sits, the two components come apart cleanly. Bias rose at the focus of covert attention and tracked V4 firing rates, while sensitivity rose at the planned saccade target and tracked reduced correlated variability between pairs of neurons.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://www.nature.com/articles/s41467-024-51283-z">The right posterior parietal cortex mediates spatial reorienting of attentional choice bias</a></h3>
+            <p class="paper-venue">Nature Communications&rsquo;24</p>
+            <p class="paper-note">To test whether the dorsal right posterior parietal cortex (rPPC) causally drives attention, participants did a cued task under either inhibitory repetitive TMS or 40 Hz transcranial alternating current stimulation of the rPPC. Both selectively altered the bias component, not sensitivity, reducing bias toward the uncued location, pinning spatial reorienting of bias on the rPPC.</p>
+          </li>
+        </ul>
+
+        <h2 id="expectation-reward">Telling attention, expectation and reward apart</h2>
+        <ul class="papers">
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://www.sciencedirect.com/science/article/pii/S105381192500415X">Attention, not expectation, governs spatial selection by probabilistic cueing</a></h3>
+            <p class="paper-venue">NeuroImage&rsquo;25</p>
+            <p class="paper-note">A probabilistic cue could bias where you look through attention or through expectation; this teases them apart with signal detection models and concurrent EEG. Posner and relevance (attention) cues, but not probability (expectation) cues, modulated SSVEP amplitude and alpha-band power, and representational similarity analysis showed Posner cueing looked like attention, so the effect is attention rather than expectation.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://doi.org/10.1371/journal.pbio.3003234">Reward expectation yields distinct effects on sensory processing and decision making in the human brain</a></h3>
+            <p class="paper-venue">PLOS Biology&rsquo;25</p>
+            <p class="paper-note">Does expecting a reward sharpen perception, or just tilt the decision? Reward expected across spatial locations raised sensitivity and engaged the usual neural attention markers, whereas reward tied to a specific choice moved the decision criterion (bias) without those markers, so reward shapes seeing and deciding through separable mechanisms.</p>
+          </li>
+        </ul>
+
+        <h2 id="deep-learning">Deep learning for medical images</h2>
+        <ul class="papers">
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://arxiv.org/abs/2507.05077">SASHA: Sequential attention based sampling for histopathological analysis</a></h3>
+            <p class="paper-venue">NeurIPS&rsquo;25</p>
+            <p class="paper-note">Whole-slide pathology images are gigapixel, labelled only at the slide level, with the tell-tale regions sparse. SASHA learns features with a lightweight hierarchical attention multiple-instance model, then zooms into just 10&ndash;20% of the high-resolution patches, matching full-resolution accuracy at a fraction of the compute and beating other sparse-sampling methods.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://arxiv.org/abs/2509.05092">CRAFT: Semi-supervised deep transfer for regression without domain alignment</a></h3>
+            <p class="paper-venue">ICCV&rsquo;25</p>
+            <p class="paper-note">Adapting a regression model to a new domain is hard when the source data cannot be kept, for privacy or storage, and labels are scarce in the new one. CRAFT regularizes with a contradistinguisher instead of aligning representations, improving RMSE by up to 9% over fine-tuning and beating four source-free methods by more than 3% on EEG gaze and MRI brain-age prediction.</p>
+          </li>
+        </ul>
+
+        <p>The recurring move is to refuse to treat &ldquo;attention&rdquo; as one thing. Split behaviour into sensitivity and bias first, and the neuroscience gets sharper: different scalp signatures, different cortical areas, even different effects of reward and expectation. The two computational papers carry the same instinct into imaging, where a learned attention decides which slivers of a slide are worth the compute. Full details are in each linked paper, and the lab&rsquo;s wider output is on <a href="https://cns.iisc.ac.in/sridhar/">its site</a>.</p>
+
+      </div>
+
+    </article>
+
+    <nav class="toc" aria-label="On this page">
+      <p class="toc-title">On this page</p>
+      <ol>
+        <li><a href="#components">Sensitivity &amp; bias</a></li>
+        <li><a href="#expectation-reward">Attention, expectation, reward</a></li>
+        <li><a href="#deep-learning">Deep learning for imaging</a></li>
+      </ol>
+    </nav>
+
+    <footer class="colophon">
+      <p>Each title links to the paper&rsquo;s preprint or publication. Summaries are drawn from the papers&rsquo; own abstracts; citations follow Sridharan Devarajan&rsquo;s CNS profile.</p>
+    </footer>
+
+  </main>
+
+  <script src="/js/blog.js?v=2" defer></script>
+
+</body>
+
+</html>

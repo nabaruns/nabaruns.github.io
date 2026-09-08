@@ -1,0 +1,270 @@
+/* blog — article + index styles, layered on site.css. */
+
+/* ---------- back link ---------- */
+
+.backlink {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  text-decoration-color: var(--rule);
+  margin-bottom: var(--gap);
+}
+
+.backlink:hover {
+  color: var(--accent);
+}
+
+/* ---------- hero ---------- */
+
+.post-hero {
+  margin-bottom: 2rem;
+  border: 1px solid var(--rule);
+  background: color-mix(in srgb, var(--accent) 5%, var(--paper));
+  overflow: hidden;
+}
+
+.post-hero svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- post header ---------- */
+
+.post-head {
+  margin-bottom: var(--gap);
+}
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+  margin: 0 0 1rem;
+}
+
+.post-badge {
+  color: var(--accent);
+  border: 1px solid var(--accent-soft);
+  padding: 0.15rem 0.5rem;
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+}
+
+.post-meta .dot {
+  color: var(--rule);
+}
+
+.post-kicker {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.9rem;
+}
+
+.post-title {
+  font-size: clamp(1.85rem, 1.4rem + 2vw, 2.5rem);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  margin: 0 0 0.9rem;
+}
+
+.post-standfirst {
+  color: var(--muted);
+  font-size: 1.0625em;
+  margin: 0;
+}
+
+/* ---------- prose ---------- */
+
+.prose h2 {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--rule);
+  margin: var(--gap) 0 1.6rem;
+}
+
+.prose > p {
+  margin: 0 0 1.15em;
+}
+
+.prose h2 {
+  scroll-margin-top: 1.5rem;
+}
+
+.prose a {
+  text-decoration-color: var(--accent-soft);
+}
+
+/* ---------- paper entries ---------- */
+
+.papers {
+  margin: 0;
+}
+
+.papers > li + li {
+  margin-top: 1.5rem;
+}
+
+.paper {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  column-gap: 1.5rem;
+  row-gap: 0.15rem;
+}
+
+.paper-title {
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+
+.paper-venue {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  white-space: nowrap;
+  margin: 0;
+  text-align: right;
+}
+
+.paper-note {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.9375em;
+  margin: 0.1rem 0 0;
+  max-width: var(--measure);
+}
+
+/* ---------- index list ---------- */
+
+.posts > li + li {
+  margin-top: 1.5rem;
+}
+
+.post-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  column-gap: 1.5rem;
+  row-gap: 0.15rem;
+}
+
+.post-row h3 {
+  font-size: 1em;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.post-row .row-date {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  white-space: nowrap;
+  margin: 0;
+  text-align: right;
+}
+
+.post-row .row-note {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.9375em;
+  margin: 0.1rem 0 0;
+}
+
+@media (max-width: 34rem) {
+  .paper,
+  .post-row {
+    grid-template-columns: 1fr;
+  }
+
+  .paper-venue,
+  .post-row .row-date {
+    text-align: left;
+    order: -1;
+    margin-bottom: 0.2rem;
+  }
+}
+
+/* ---------- floating table of contents ---------- */
+
+/* Hidden by default; becomes a floating rail once there is room in the
+   right margin beside the centred column. Below that, the article is
+   read top to bottom and the rail is not shown. */
+.toc {
+  display: none;
+}
+
+@media (min-width: 74rem) {
+  .toc {
+    display: block;
+    position: fixed;
+    top: clamp(3rem, 14vh, 8.5rem);
+    left: calc(50% + var(--page) / 2 + 2rem);
+    width: 13rem;
+    max-height: 74vh;
+    overflow-y: auto;
+    font-family: var(--mono);
+  }
+
+  .toc-title {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 0.9rem;
+  }
+
+  .toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid var(--rule);
+  }
+
+  .toc li + li {
+    margin-top: 0.15rem;
+  }
+
+  .toc a {
+    display: block;
+    padding: 0.2rem 0 0.2rem 0.85rem;
+    margin-left: -1px;
+    border-left: 1px solid transparent;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 120ms ease, border-color 120ms ease;
+  }
+
+  .toc a:hover {
+    color: var(--ink);
+  }
+
+  .toc a.is-active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+}
