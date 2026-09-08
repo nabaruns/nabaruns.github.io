@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>The HiRo Lab reading list — Nabarun Sarkar</title>
+  <meta name="description" content="A summary of every paper on IISc's HiRo Lab research page: interactive RL, foundation models for robotics, safe human-robot interaction, optimal control, and 3D vision.">
+  <meta name="author" content="Nabarun Sarkar">
+  <link rel="canonical" href="https://nabaruns.com/blog/hiro-lab-research.html">
+
+  <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The HiRo Lab reading list: robots that learn from people">
+  <meta property="og:description" content="A summary of every paper on IISc's HiRo Lab research page, grouped by the five threads the lab pulls on.">
+  <meta property="og:url" content="https://nabaruns.com/blog/hiro-lab-research.html">
+  <meta property="og:image" content="https://nabaruns.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@nbrsr">
+
+  <link rel="preload" href="/fonts/newsreader-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/plexmono-400-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css?v=5">
+  <link rel="stylesheet" href="/css/blog.css?v=2">
+</head>
+
+<body>
+
+  <main class="page">
+
+    <a class="backlink" href="/blog/">&larr; Writing</a>
+
+    <article>
+
+      <div class="post-hero" aria-hidden="true">
+        <svg viewBox="0 0 1000 380" role="img" preserveAspectRatio="xMidYMid meet">
+          <!-- faint scanning grid -->
+          <g stroke="var(--rule)" stroke-width="1">
+            <line x1="0" y1="300" x2="1000" y2="300"/>
+            <line x1="120" y1="300" x2="120" y2="312"/>
+            <line x1="260" y1="300" x2="260" y2="312"/>
+            <line x1="400" y1="300" x2="400" y2="312"/>
+            <line x1="540" y1="300" x2="540" y2="312"/>
+            <line x1="680" y1="300" x2="680" y2="312"/>
+            <line x1="820" y1="300" x2="820" y2="312"/>
+          </g>
+
+          <!-- camera / vision cone -->
+          <g stroke="var(--accent-soft)" stroke-width="1.5" fill="none" stroke-dasharray="3 6">
+            <line x1="470" y1="70" x2="620" y2="288"/>
+            <line x1="470" y1="70" x2="770" y2="288"/>
+          </g>
+          <circle cx="470" cy="70" r="7" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.5"/>
+          <circle cx="470" cy="70" r="2.5" fill="var(--accent)"/>
+
+          <!-- articulated arm -->
+          <g fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="120" y="300" width="70" height="14" fill="var(--ink)" stroke="none"/>
+            <line x1="155" y1="300" x2="255" y2="190"/>
+            <line x1="255" y1="190" x2="430" y2="150"/>
+            <line x1="430" y1="150" x2="520" y2="175"/>
+          </g>
+          <!-- joints -->
+          <g fill="var(--paper)" stroke="var(--ink)" stroke-width="4">
+            <circle cx="155" cy="300" r="10"/>
+            <circle cx="255" cy="190" r="9"/>
+            <circle cx="430" cy="150" r="9"/>
+          </g>
+          <!-- gripper -->
+          <g fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round">
+            <path d="M520 175 l26 -14"/>
+            <path d="M546 161 l0 -22"/>
+            <path d="M546 161 l18 14"/>
+          </g>
+
+          <!-- objects on the ground -->
+          <circle cx="620" cy="285" r="15" fill="none" stroke="var(--ink)" stroke-width="4"/>
+          <rect x="686" y="272" width="28" height="28" fill="none" stroke="var(--ink)" stroke-width="4"/>
+          <path d="M770 272 l16 28 l-32 0 z" fill="none" stroke="var(--ink)" stroke-width="4"/>
+
+          <!-- affordance reticle on the target -->
+          <g stroke="var(--accent)" stroke-width="2.5" fill="none">
+            <circle cx="620" cy="285" r="30"/>
+            <line x1="620" y1="243" x2="620" y2="255"/>
+            <line x1="620" y1="315" x2="620" y2="327"/>
+            <line x1="578" y1="285" x2="590" y2="285"/>
+            <line x1="650" y1="285" x2="662" y2="285"/>
+          </g>
+
+          <!-- title marks: a few floating latent dots -->
+          <g fill="var(--accent-soft)">
+            <circle cx="835" cy="120" r="3"/>
+            <circle cx="880" cy="160" r="3"/>
+            <circle cx="905" cy="110" r="3"/>
+            <circle cx="860" cy="90" r="3"/>
+          </g>
+          <g stroke="var(--accent-soft)" stroke-width="1.5">
+            <line x1="835" y1="120" x2="880" y2="160"/>
+            <line x1="835" y1="120" x2="860" y2="90"/>
+            <line x1="860" y1="90" x2="905" y2="110"/>
+          </g>
+        </svg>
+      </div>
+
+      <header class="post-head">
+        <p class="post-meta">
+          <span class="post-badge">Robotics</span>
+          <span>Research summary</span>
+          <span class="dot">&middot;</span>
+          <span>2026</span>
+          <span class="dot">&middot;</span>
+          <span>9 min read</span>
+        </p>
+        <h1 class="post-title">The HiRo Lab reading list: robots that learn from people</h1>
+        <p class="post-standfirst">IISc&rsquo;s <a href="https://hiro.cps.iisc.ac.in/research/">HiRo Lab</a> works on the theory and the algorithms that let robots learn from, adapt to, and collaborate with people in messy real-world settings. Their research page reads like a map of that problem. Here is a summary of every paper on it, grouped by the five threads they pull on.</p>
+      </header>
+
+      <div class="prose">
+
+        <p>The common thread is a robot that does not get a clean specification of the world. It gets a human teacher who is inconsistent, a language instruction that is vague, a gripper it has never seen, or a contact task where a wrong move hurts someone. The work below is roughly evenly split between making robots more capable and making them provably safe while they do it.</p>
+
+        <h2 id="foundation-models">Foundation models for robotics</h2>
+        <ul class="papers">
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://airvlab.github.io/G-VLA/">Gripper-aware Vision Language Action Models</a></h3>
+            <p class="paper-venue">ECCV&rsquo;26</p>
+            <p class="paper-note">Vision-language-action policies quietly assume one gripper, but a parallel jaw and a suction cup need different strategies, and the training data skews to parallel jaws. G-VLA introduces MiGA, 103,000 demonstrations across five gripper types, plus a multi-gripper tokenizer and adapter-based policy routing, and transfers better to new objects, tasks and grippers in both simulation and the real world.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://ieeexplore.ieee.org/abstract/document/11150730">OVITA: Open-Vocabulary Interpretable Trajectory Adaptations</a></h3>
+            <p class="paper-venue">RA-L&rsquo;25</p>
+            <p class="paper-note">Lets a non-expert reshape a robot&rsquo;s trajectory with a plain-language instruction instead of code. It chains several pretrained LLMs to write the adaptation as code, with a separate LLM explaining what changed, demonstrated on a KUKA IIWA arm, a Clearpath Jackal ground robot and a Crazyflie drone.</p>
+          </li>
+        </ul>
+
+        <h2 id="interactive-rl">Interactive RL and imitation learning</h2>
+        <ul class="papers">
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://focaslab.github.io/beyondtheteacher/">Beyond the Teacher: Leveraging Mixed-Skill Demonstrations for Robust Imitation Learning</a></h3>
+            <p class="paper-venue">ICRA&rsquo;26</p>
+            <p class="paper-note">Aims for expert-level skill from imperfect, mixed-skill demonstrations rather than a large clean set. A two-stage pipeline scores and selects demonstrations, extracts a canonical motion with periodic Dynamic Movement Primitives, then refines it with an LSTM, reaching expert-like performance from as few as four demonstrations on wiping, weaving and pick-and-place.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://openreview.net/forum?id=gaYyBvP2Rz">PACER: Progress-Aligned Curation for Error-Resilient Imitation Learning</a></h3>
+            <p class="paper-venue">CoRLW&rsquo;25</p>
+            <p class="paper-note">Targets imitation from sparse, noisy demonstrations where corrupted segments and misaligned timing wreck the policy. It learns a state-dependent task phase to align demonstrations in time, then uses a leave-one-out consensus to detect and down-weight corrupted segments, collapsing to a simple weighted behaviour-cloning step.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://arxiv.org/abs/2503.12243">RISE: Robust Imitation through Stochastic Encodings</a></h3>
+            <p class="paper-venue">IROSW&rsquo;25</p>
+            <p class="paper-note">Behaviour-cloned policies fail when the environment is measured noisily or gets disturbed at deployment. RISE encodes parameters such as obstacle state, orientation and velocity into a smooth variational latent space, so the imitation policy generalizes better at test time.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://arxiv.org/abs/2508.19607">Impedance Primitive-Augmented Hierarchical Reinforcement Learning for Sequential Tasks</a></h3>
+            <p class="paper-venue">ICRA&rsquo;25</p>
+            <p class="paper-note">Gives a hierarchical RL agent behaviour primitives that execute under variable-stiffness control, with an adaptive stiffness controller and affordance coupling. It learns faster and succeeds more often on contact-rich sequential tasks: block lifting, door opening, pushing and surface cleaning.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://ieeexplore.ieee.org/document/11369949">Sequentially Teaching Sequential Tasks (ST)&sup2;</a></h3>
+            <p class="paper-venue">RA-M&rsquo;26</p>
+            <p class="paper-note">Long-horizon tasks are hard to demonstrate because deviations accumulate and human teachers fatigue. (ST)&sup2; lets a person set keypoints and teach incrementally; in a 16-participant study on a retail restocking task, the sequential approach beat teaching the whole task at once for most users, 10 to 5 with one tie.</p>
+          </li>
+        </ul>
+
+        <h2 id="safe-hri">Safe and compliant human-robot interaction</h2>
+        <ul class="papers">
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://arxiv.org/abs/2511.16330">Safe and Optimal Variable Impedance Control via Certified Reinforcement Learning</a></h3>
+            <p class="paper-venue">ICRA&rsquo;26</p>
+            <p class="paper-note">Letting RL tune impedance gains risks instability and unsafe exploration as those gains change over time. Certified Gaussian Manifold Sampling reframes exploration as drawing from a manifold of provably stable gain schedules, giving stable rollouts and bounded tracking error under model uncertainty, in simulation and on a real robot.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://tiwari-pranav.github.io/SafeDMPs/">SafeDMPs: Integrating Formal Safety with DMPs for Adaptive HRI</a></h3>
+            <p class="paper-venue">ICRA&rsquo;26</p>
+            <p class="paper-note">DMPs generalize from a single demonstration but carry no safety guarantee; control barrier functions are provably safe but lean on expensive real-time optimization. SafeDMPs adds Spatio-Temporal Tubes for a closed-form policy that dodges static and dynamic obstacles and runs orders of magnitude faster on a 7-DOF manipulator.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://arxiv.org/abs/2603.15136">Safe Flow Q-Learning</a></h3>
+            <p class="paper-venue">RLC&rsquo;26</p>
+            <p class="paper-note">Offline safe RL: find a reward-maximizing policy from a fixed dataset under strict safety constraints. SafeFQL pairs a Hamilton-Jacobi reachability safety value with behaviour cloning to train a flow policy, then distills it into a one-step actor, matching prior methods with fewer constraint violations and far lower inference latency than diffusion baselines.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://tayalmanan28.github.io/v-ocbf/">V-OCBF: Value-Guided Offline Control Barrier Functions</a></h3>
+            <p class="paper-venue">TMLR&rsquo;26</p>
+            <p class="paper-note">Learns a safety filter purely from fixed offline data, since expectation-based safe-RL constraints do not guarantee per-trajectory safety and classical barrier functions need hand-designed barriers and known dynamics. V-OCBF learns the dynamics and a neural barrier with a reachability Bellman target, then runs it as a real-time QP filter that cuts violations while preserving task performance.</p>
+          </li>
+        </ul>
+
+        <h2 id="optimization">Optimization and optimal control</h2>
+        <ul class="papers">
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://ieeexplore.ieee.org/document/10718695">Adaptive Critic Optimal Control of an Uncertain Robot Manipulator</a></h3>
+            <p class="paper-venue">T-CST&rsquo;24</p>
+            <p class="paper-note">Real manipulation is long sequences of motor skills under uncertain dynamics and unknown payloads. A single adaptive-critic neural network learns the task cost, the internal dynamics and the optimal control law together, with Lyapunov stability proofs, validated on a 7-DoF Barrett WAM.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://ieeexplore.ieee.org/abstract/document/11049008">Generalizable motion policies through keypoint parameterization and transportation maps</a></h3>
+            <p class="paper-venue">T-RO&rsquo;25</p>
+            <p class="paper-note">Generalizes a motion policy to new objects and layouts without retraining per scenario. It represents a task by semantic keypoints and fits a differentiable transportation map between source and target keypoint distributions, carrying over positions and velocities with uncertainty estimates.</p>
+          </li>
+        </ul>
+
+        <h2 id="vision">3D vision, SLAM and world models</h2>
+        <ul class="papers">
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://aioz-ai.github.io/AffordMatcher/">AffordMatcher: Affordance Learning in 3D Scenes from Visual Signifiers</a></h3>
+            <p class="paper-venue">CVPR&rsquo;26</p>
+            <p class="paper-note">Finds the interactive regions in cluttered 3D indoor scenes, including the small but crucial parts like knobs and handles that object-level methods miss. It introduces AffordBridge, 291,637 interaction annotations over 685 scenes, and matches image to point-cloud keypoints, reaching 53.4 mAP against a 45.6 prior best at 20.7M parameters and 112.5 ms inference.</p>
+          </li>
+          <li class="paper">
+            <h3 class="paper-title"><a href="https://airvlab.github.io/GCA-Bench/">Beyond Visual Grasping: Benchmarking Complex Grasping from Detection to Execution</a></h3>
+            <p class="paper-venue">IROS&rsquo;26</p>
+            <p class="paper-note">Grasping benchmarks usually test pose detection in isolation and skip the reasoning and reliable execution a real task needs. GCA-Bench spans 102 tasks across singulated, cluttered, constrained and semantic scenarios with 2,800 trajectories, and finds even recent foundation models and specialist grasping methods stay below 70% success on the hard cases.</p>
+          </li>
+        </ul>
+
+        <p>Read together, the list is a bet that the frontier in robot learning is no longer raw capability but the interface with the world outside the lab: unreliable teachers, ambiguous language, unfamiliar hardware, and the safety guarantees you need before a robot shares space with a person. Full details and papers are on the <a href="https://hiro.cps.iisc.ac.in/research/">HiRo Lab research page</a>.</p>
+
+      </div>
+
+    </article>
+
+    <nav class="toc" aria-label="On this page">
+      <p class="toc-title">On this page</p>
+      <ol>
+        <li><a href="#foundation-models">Foundation models</a></li>
+        <li><a href="#interactive-rl">Interactive RL &amp; imitation</a></li>
+        <li><a href="#safe-hri">Safe human-robot interaction</a></li>
+        <li><a href="#optimization">Optimization &amp; control</a></li>
+        <li><a href="#vision">3D vision &amp; world models</a></li>
+      </ol>
+    </nav>
+
+    <footer class="colophon">
+      <p>Each title links to the paper&rsquo;s project page, preprint or publication. Summaries are drawn from the papers&rsquo; own abstracts; venues follow the HiRo Lab listing.</p>
+    </footer>
+
+  </main>
+
+  <script src="/js/blog.js?v=2" defer></script>
+
+</body>
+
+</html>
