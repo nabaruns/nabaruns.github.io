@@ -2,6 +2,10 @@
 
 /* ---------- back link ---------- */
 
+.backlink + .draw-clear {
+  margin-left: 1rem;
+}
+
 .backlink {
   display: inline-block;
   font-family: var(--mono);

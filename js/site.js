@@ -33,17 +33,19 @@
 
   /* ---------- margin doodles ---------- */
   // The pencil is always live: drag anywhere and you leave a mark. Marks are
-  // stored per tab, so they survive a reload but never outlive the session.
-  // Restricted to fine pointers — on touch, a drag has to stay a scroll.
+  // saved to localStorage, keyed per page, so they persist across reloads and
+  // return visits until you clear them. Fine pointers only; on touch a drag
+  // has to stay a scroll. The clear button is optional (it only exists on
+  // pages that offer one), so the layer works with or without it.
 
   const clearBtn = document.querySelector('.draw-clear');
   const finePointer = matchMedia('(any-pointer: fine)').matches;
-  if (!clearBtn || !finePointer) return;
+  if (!finePointer) return;
 
   // anything a reader might legitimately click, select or focus is left alone
   const INTERACTIVE = 'a, button, input, textarea, select, summary, label, dialog';
 
-  const KEY = 'ns-doodle';
+  const KEY = 'ns-doodle:' + location.pathname;
   let canvas = null, ctx = null, strokes = [], current = null;
 
   const docW = () => Math.max(document.documentElement.scrollWidth, innerWidth);
@@ -51,15 +53,15 @@
 
   const load = () => {
     try {
-      const raw = sessionStorage.getItem(KEY);
+      const raw = localStorage.getItem(KEY);
       return raw ? JSON.parse(raw) : [];
     } catch { return []; }
   };
 
   const save = () => {
     try {
-      sessionStorage.setItem(KEY, JSON.stringify(strokes));
-    } catch { /* private mode or quota — the drawing just won't persist */ }
+      localStorage.setItem(KEY, JSON.stringify(strokes));
+    } catch { /* private mode or quota, the drawing just won't persist */ }
   };
 
   function build() {
@@ -136,10 +138,10 @@
   }
 
   function sync() {
-    clearBtn.hidden = !strokes.length;
+    if (clearBtn) clearBtn.hidden = !strokes.length;
   }
 
-  clearBtn.addEventListener('click', () => {
+  if (clearBtn) clearBtn.addEventListener('click', () => {
     strokes = [];
     current = null;
     save();
