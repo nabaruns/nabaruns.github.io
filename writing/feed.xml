@@ -5,11 +5,21 @@
   <link href="https://nabaruns.com/writing/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="https://nabaruns.com/writing/" rel="alternate" type="text/html"/>
   <id>https://nabaruns.com/writing/</id>
-  <updated>2026-09-09T00:00:00Z</updated>
+  <updated>2026-09-10T00:00:00Z</updated>
   <author>
     <name>Nabarun Sarkar</name>
     <uri>https://nabaruns.com/</uri>
   </author>
+
+  <entry>
+    <title>The KV cache and the long-context race</title>
+    <link href="https://nabaruns.com/writing/kv-cache-and-context.html" rel="alternate" type="text/html"/>
+    <id>https://nabaruns.com/writing/kv-cache-and-context.html</id>
+    <published>2026-09-10T00:00:00Z</published>
+    <updated>2026-09-10T00:00:00Z</updated>
+    <category term="Machine learning"/>
+    <summary>A history of the KV cache in LLMs: why it exists, the papers that shrank it, the position tricks that stretched context, and how windows grew from 2,000 tokens to a million.</summary>
+  </entry>
 
   <entry>
     <title>The machinery of attention: a reading list from IISc's Centre for Neuroscience</title>

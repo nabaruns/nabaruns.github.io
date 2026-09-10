@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>The KV cache and the long-context race · Nabarun Sarkar</title>
+  <meta name="description" content="A history of the KV cache in LLMs: why it exists, the papers that shrank it (MQA, GQA, MLA, FlashAttention, PagedAttention, quantization), how position tricks stretched context, and how windows grew from 2,000 tokens to a million.">
+  <meta name="author" content="Nabarun Sarkar">
+  <link rel="canonical" href="https://nabaruns.com/writing/kv-cache-and-context.html">
+
+  <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="The KV cache and the long-context race">
+  <meta property="og:description" content="Why the KV cache exists, the papers that shrank it, and how LLM context grew from 2,000 tokens to a million.">
+  <meta property="og:url" content="https://nabaruns.com/writing/kv-cache-and-context.html">
+  <meta property="og:image" content="https://nabaruns.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@nbrsr">
+
+  <meta property="article:published_time" content="2026-09-10">
+  <meta property="article:author" content="Nabarun Sarkar">
+  <meta property="article:section" content="Machine learning">
+
+  <link rel="alternate" type="application/atom+xml" title="Writing by Nabarun Sarkar" href="/writing/feed.xml">
+
+  <link rel="preload" href="/fonts/newsreader-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/plexmono-400-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css?v=5">
+  <link rel="stylesheet" href="/css/blog.css?v=2">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "The KV cache and the long-context race",
+    "description": "A history of the KV cache in LLMs: why it exists, the papers that shrank it, position tricks that stretched context, and how windows grew from 2,000 tokens to a million.",
+    "url": "https://nabaruns.com/writing/kv-cache-and-context.html",
+    "mainEntityOfPage": "https://nabaruns.com/writing/kv-cache-and-context.html",
+    "datePublished": "2026-09-10",
+    "dateModified": "2026-09-10",
+    "image": "https://nabaruns.com/og.png",
+    "author": { "@type": "Person", "name": "Nabarun Sarkar", "url": "https://nabaruns.com/" },
+    "publisher": { "@type": "Person", "name": "Nabarun Sarkar", "url": "https://nabaruns.com/" },
+    "keywords": "KV cache, attention, transformer, long context, FlashAttention, PagedAttention, vLLM, MQA, GQA, MLA, RoPE, YaRN, Mamba, LLM inference"
+  }
+  </script>
+</head>
+
+<body>
+
+  <main class="page">
+
+    <a class="backlink" href="/writing/">&larr; Writing</a>
+
+    <article>
+
+      <div class="post-hero" aria-hidden="true">
+        <svg viewBox="0 0 1000 380" role="img" preserveAspectRatio="xMidYMid meet">
+          <!-- cache size grows with sequence length -->
+          <polyline fill="none" stroke="var(--accent-soft)" stroke-width="2" stroke-linecap="round"
+            points="150,150 300,120 430,96 560,70"/>
+          <g fill="var(--accent-soft)">
+            <circle cx="150" cy="150" r="3"/>
+            <circle cx="300" cy="120" r="3"/>
+            <circle cx="430" cy="96" r="3"/>
+            <circle cx="560" cy="70" r="3"/>
+          </g>
+
+          <!-- the KV cache as a lattice: rows are layers, columns are tokens -->
+          <g stroke="var(--ink)" stroke-width="1.5">
+            <line x1="150" y1="180" x2="550" y2="180"/>
+            <line x1="150" y1="217" x2="550" y2="217"/>
+            <line x1="150" y1="254" x2="550" y2="254"/>
+            <line x1="150" y1="291" x2="550" y2="291"/>
+            <line x1="150" y1="180" x2="150" y2="291"/>
+            <line x1="190" y1="180" x2="190" y2="291"/>
+            <line x1="230" y1="180" x2="230" y2="291"/>
+            <line x1="270" y1="180" x2="270" y2="291"/>
+            <line x1="310" y1="180" x2="310" y2="291"/>
+            <line x1="350" y1="180" x2="350" y2="291"/>
+            <line x1="390" y1="180" x2="390" y2="291"/>
+            <line x1="430" y1="180" x2="430" y2="291"/>
+            <line x1="470" y1="180" x2="470" y2="291"/>
+            <line x1="510" y1="180" x2="510" y2="291"/>
+            <line x1="550" y1="180" x2="550" y2="291"/>
+          </g>
+
+          <!-- attention sink: the first column, always kept -->
+          <rect x="150" y="180" width="40" height="111" fill="var(--accent)" fill-opacity="0.85"/>
+
+          <!-- the cache keeps extending as tokens arrive -->
+          <g stroke="var(--rule)" stroke-width="1.5" stroke-dasharray="3 5">
+            <line x1="590" y1="180" x2="590" y2="291"/>
+            <line x1="630" y1="180" x2="630" y2="291"/>
+          </g>
+
+          <!-- sliding window: the recent columns -->
+          <path d="M432 168 L432 162 L548 162 L548 168" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- generation runs left to right over time -->
+          <line x1="150" y1="315" x2="640" y2="315" stroke="var(--ink)" stroke-width="2"/>
+          <path d="M636 309 L650 315 L636 321 Z" fill="var(--ink)"/>
+        </svg>
+      </div>
+
+      <header class="post-head">
+        <p class="post-meta">
+          <span class="post-badge">Machine learning</span>
+          <span>Explainer</span>
+          <span class="dot">&middot;</span>
+          <span>2026</span>
+          <span class="dot">&middot;</span>
+          <span>17 min read</span>
+        </p>
+        <h1 class="post-title">The KV cache and the long-context race</h1>
+        <p class="post-standfirst">A transformer re-reads everything it has written so far to produce each next token. The KV cache is the trick that makes that affordable, and the reason a long prompt is expensive. Here is the history of that one data structure: where it came from, the papers that shrank it, and how context windows grew from about 2,000 tokens to a million.</p>
+      </header>
+
+      <div class="prose">
+
+        <p>Generate text with a transformer and it works one token at a time, attending to every token before it. Do that literally and you redo a mountain of work: at position 1,000 the model recomputes what it already computed at positions 1 through 999. The KV cache is the fix for that waste. A few years on, it is also the main thing standing between you and a million-token prompt. Almost every efficiency paper of the last few years is, underneath, an attack on this one structure.</p>
+
+        <h2 id="cache">What the cache actually is</h2>
+        <p>Attention turns each token into three vectors: a query, a key and a value. To produce the next token, its query is compared against the keys of all earlier tokens, and those scores are used to mix the earlier tokens&rsquo; values. The point that matters for cost: once a token is in the past, its key and value never change. So you compute them once and keep them. That store of past keys and values is the KV cache, and it is a direct consequence of the attention mechanism from <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a> (2017), the paper that dropped recurrence and built the model out of attention alone.</p>
+        <p>The catch is how the cache grows. It holds one key and one value for every token, in every attention head, in every layer. So it scales with sequence length times model depth times head count, and for a large model at long context it runs to many gigabytes. Worse, every single new token has to stream that whole cache out of memory to attend over it. The 2019 multi-query attention paper, <a href="https://arxiv.org/abs/1911.02150">Fast Transformer Decoding</a>, named the real problem: during generation the bottleneck is not arithmetic, it is the memory bandwidth spent reloading those keys and values. That framing set the agenda for everything that followed.</p>
+
+        <h2 id="fast">Making attention itself cheap: FlashAttention</h2>
+        <p>Before you shrink the cache, there is the attention computation, which is quadratic in sequence length in both time and memory. <a href="https://arxiv.org/abs/2205.14135">FlashAttention</a> (2022) made a sharp observation: the dominant cost was moving data between the GPU&rsquo;s slow main memory and its fast on-chip memory, not the math. By tiling the computation to stay on-chip and never writing the full attention matrix out, it computes exact attention, no approximation, with memory that grows linearly instead of quadratically, and ran about 3x faster than a standard implementation on GPT-2.</p>
+        <p><a href="https://arxiv.org/abs/2307.08691">FlashAttention-2</a> (2023) reworked the parallelism and cut the non-matmul work, reaching around 225 TFLOPs/s on an A100, about 72% of what the hardware can do and roughly double the first version. <a href="https://arxiv.org/abs/2407.08608">FlashAttention-3</a> (2024) rebuilt it again for Hopper H100s, overlapping compute with data movement and adding FP8, up to 740 TFLOPs/s in FP16 and close to 1.2 PFLOPs/s in FP8. None of this changes the numbers the model produces. It just makes long context cheap enough to train and serve.</p>
+
+        <h2 id="shrink">Shrinking the cache: fewer keys and values</h2>
+        <p>The cache size is tokens times layers times heads times head dimension. Architecture cannot change how many tokens you have, but it can change the rest. The head count went first.</p>
+        <p>Multi-query attention, from that same 2019 paper, shares a single key and value head across all the query heads. The cache shrinks by the head count, decoding gets much faster, and quality drops only a little. <a href="https://arxiv.org/abs/2305.13245">Grouped-query attention</a> (2023) found the middle ground: a handful of key-value groups rather than one or many. It lands close to full multi-head quality at close to multi-query speed, and it can be uptrained from an existing checkpoint with about 5% of the original pretraining compute. That cheapness is why Llama 2 and 3 use it.</p>
+        <p>DeepSeek took a different angle. <a href="https://arxiv.org/abs/2405.04434">Multi-head latent attention</a> in DeepSeek-V2 (2024) does not drop heads; it compresses the keys and values into a small shared low-rank vector and caches that instead. They reported the KV cache down 93.3% and up to 5.76x the generation throughput of their earlier 67B model.</p>
+        <p>The cache also grows with depth, so the next move was to share it across layers. <a href="https://arxiv.org/abs/2405.12981">Cross-layer attention</a> (2024) reuses key and value heads between neighbouring layers for roughly another 2x cut at nearly the same accuracy. <a href="https://arxiv.org/abs/2405.05254">YOCO</a> (2024) goes further with a decoder-decoder design that computes the global cache once and lets later layers read it, holding a 1M-token context with near-perfect retrieval.</p>
+
+        <h2 id="serve">Serving the cache: paging and reuse</h2>
+        <p>Even a right-sized cache is wasted if the serving system manages memory badly. Requests arrive and finish at different times, each with its own cache that grows as it generates, and plain contiguous allocation leaves the GPU full of unusable gaps. <a href="https://arxiv.org/abs/2309.06180">PagedAttention</a> (2023), the idea behind vLLM, borrows virtual memory from operating systems: store the cache in fixed-size blocks that need not sit next to each other, and share identical blocks across requests. Near-zero waste, bigger batches, and 2 to 4x the throughput of the serving stacks before it.</p>
+        <p>The other easy win is reuse. A system prompt, a set of tool descriptions, a long document you ask five questions about: all of it repeats across calls, and recomputing its attention state every time is pure waste. <a href="https://arxiv.org/abs/2311.04934">Prompt Cache</a> (2023) precomputes those reusable chunks once and splices them into new prompts, cutting time-to-first-token by about 8x on GPU and up to 60x on CPU. This is the machinery behind the &ldquo;prompt caching&rdquo; you now see in commercial APIs.</p>
+
+        <h2 id="evict">Keeping less: windows, sinks, eviction, quantization</h2>
+        <p>The other way to shrink the cache is to not store all of it.</p>
+        <p><strong>Sliding windows.</strong> Only attend to the last N tokens. <a href="https://arxiv.org/abs/2004.05150">Longformer</a> (2020) did this for long documents with a local window plus a few global tokens, turning quadratic attention linear. <a href="https://arxiv.org/abs/2310.06825">Mistral 7B</a> (2023) shipped sliding-window attention in a general-purpose model, stacking windows across layers so information still travels further than any one window.</p>
+        <p><strong>Attention sinks.</strong> Naive windowing breaks a model the moment the text runs past its training length. <a href="https://arxiv.org/abs/2309.17453">StreamingLLM</a> (2023) found the reason: models dump a large share of their attention onto the first few tokens no matter what those tokens say. Keep those few &ldquo;sink&rdquo; tokens plus a recent window and the model stays stable over effectively endless streams, with a 22.2x speedup over recomputing from scratch.</p>
+        <p><strong>Eviction by importance.</strong> <a href="https://arxiv.org/abs/2306.14048">H2O</a> (2023) noticed that a small set of &ldquo;heavy hitter&rdquo; tokens carry most of the attention weight. Keep those plus the recent tokens, drop the rest, and throughput rises up to 29x.</p>
+        <p><strong>Fewer bits.</strong> Store the same tokens at lower precision. <a href="https://arxiv.org/abs/2401.18079">KVQuant</a> (2024) gets the cache to about 3 bits with under 0.1 perplexity cost, by quantizing keys per channel and before the rotary embedding, enough to fit a 1M-token context for a 7B model on one 80GB A100. <a href="https://arxiv.org/abs/2402.02750">KIVI</a> (2024) is a tuning-free 2-bit scheme, keys per channel and values per token, for 2.6x less peak memory and up to 4x larger batches.</p>
+
+        <h2 id="positions">Teaching a model a longer context</h2>
+        <p>Shrinking the cache lets you afford a long context. Position encoding decides whether the model can use it. Most current LLMs use <a href="https://arxiv.org/abs/2104.09864">RoPE</a> (2021), which encodes position by rotating the query and key vectors, so attention ends up depending on the distance between two tokens. The problem is that a RoPE model falls apart if you simply feed it sequences longer than it trained on: the extrapolated positions produce runaway attention scores.</p>
+        <p><a href="https://arxiv.org/abs/2306.15595">Position Interpolation</a> (2023) fixed this by squeezing the position indices back into the trained range rather than extrapolating past it, extending LLaMA to 32,768 tokens with about a thousand fine-tuning steps. <a href="https://arxiv.org/abs/2309.00071">YaRN</a> (2023) refined the idea, building on &ldquo;NTK-aware&rdquo; interpolation by treating different frequency bands differently and scaling the attention temperature, reaching 128k context with far less training. <a href="https://arxiv.org/abs/2402.13753">LongRoPE</a> (2024) searched for the best non-uniform interpolation and pushed past 2 million tokens.</p>
+
+        <h2 id="race">Scaling across machines, and the numbers everyone watched</h2>
+        <p>Some contexts are too long for a single device&rsquo;s memory no matter how hard you compress. <a href="https://arxiv.org/abs/2310.01889">Ring Attention</a> (2023) splits the sequence across a ring of GPUs and overlaps passing key-value blocks around the ring with the attention compute, so the context you can hold scales with the number of devices, with no approximation. Put all of these tricks together and you get the context windows that shipped in real models:</p>
+
+        <ul class="gloss">
+          <li>
+            <span class="name"><a href="https://arxiv.org/abs/2005.14165">GPT-3</a> &middot; 2020</span>
+            <span class="what">2,048 tokens</span>
+          </li>
+          <li>
+            <span class="name"><a href="https://arxiv.org/abs/2307.09288">Llama 2</a> &middot; 2023</span>
+            <span class="what">4,096 tokens</span>
+          </li>
+          <li>
+            <span class="name"><a href="https://openai.com/index/gpt-4-research/">GPT-4</a> &middot; 2023</span>
+            <span class="what">8k, then 32k tokens</span>
+          </li>
+          <li>
+            <span class="name"><a href="https://www.anthropic.com/news/claude-2">Claude 2</a> &middot; 2023</span>
+            <span class="what">100,000 tokens</span>
+          </li>
+          <li>
+            <span class="name"><a href="https://openai.com/index/new-models-and-developer-products-announced-at-devday/">GPT-4 Turbo</a> &middot; 2023</span>
+            <span class="what">128,000 tokens</span>
+          </li>
+          <li>
+            <span class="name"><a href="https://www.anthropic.com/news/claude-2-1">Claude 2.1</a> &middot; 2023</span>
+            <span class="what">200,000 tokens</span>
+          </li>
+          <li>
+            <span class="name"><a href="https://ai.meta.com/blog/meta-llama-3-1/">Llama 3.1</a> &middot; 2024</span>
+            <span class="what">128,000 tokens</span>
+          </li>
+          <li>
+            <span class="name"><a href="https://arxiv.org/abs/2403.05530">Gemini 1.5</a> &middot; 2024</span>
+            <span class="what">1,000,000 in production, 10M tested</span>
+          </li>
+        </ul>
+
+        <p><a href="https://arxiv.org/abs/2403.05530">Gemini 1.5</a> is the high-water mark on paper: its report holds over 99% retrieval out to 10 million tokens across text, video and audio, with a 1M-token production window. Two decisions made that possible: enough of the cache tricks above to fit the context, and enough position work to make the model attend across it.</p>
+
+        <h2 id="beyond">Leaving the cache behind</h2>
+        <p>The cache exists because attention looks back at every token. Some architectures reject that premise. <a href="https://arxiv.org/abs/2006.16236">Linear attention</a> (2020) rewrites attention with kernel feature maps so it costs O(n) instead of O(n&sup2;), and at inference it runs like an RNN, carrying a fixed-size state rather than a cache that grows with every token, up to thousands of times faster on very long sequences. The price was quality, which is why linear models lagged for years.</p>
+        <p><a href="https://arxiv.org/abs/2312.00752">Mamba</a> (2023) closed much of that gap by making the state selective, letting the model decide what to keep or forget based on the input rather than compressing everything the same way. It scales linearly, generates about 5x faster than a comparable transformer, and a 3B Mamba matched transformers twice its size. The frontier now is hybrids that keep a few full-attention layers for precise recall and fill the rest with cheap linear or state-space layers, buying attention&rsquo;s memory where it earns its keep and constant memory everywhere else.</p>
+
+        <p>The through-line is short. Attention made models good and made them expensive. The KV cache made generation affordable and became the new ceiling. Almost everything since has been chipping at that one structure: cache fewer heads, fewer layers, fewer bits, fewer tokens, or refuse to store them at all. Context went from 2,000 tokens to a million in about four years on the back of those moves, and the next order of magnitude will come from the same place.</p>
+
+      </div>
+
+    </article>
+
+    <nav class="toc" aria-label="On this page">
+      <p class="toc-title">On this page</p>
+      <ol>
+        <li><a href="#cache">What the cache is</a></li>
+        <li><a href="#fast">FlashAttention</a></li>
+        <li><a href="#shrink">Fewer keys and values</a></li>
+        <li><a href="#serve">Paging and reuse</a></li>
+        <li><a href="#evict">Windows, sinks, eviction</a></li>
+        <li><a href="#positions">A longer context</a></li>
+        <li><a href="#race">The context race</a></li>
+        <li><a href="#beyond">Beyond attention</a></li>
+      </ol>
+    </nav>
+
+    <footer class="colophon">
+      <p>Each linked title goes to the paper&rsquo;s arXiv page or the model&rsquo;s announcement. Summaries and numbers are drawn from those sources.</p>
+    </footer>
+
+  </main>
+
+  <script src="/js/blog.js?v=2" defer></script>
+
+</body>
+
+</html>
