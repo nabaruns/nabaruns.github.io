@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1B6SSBQW33"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1B6SSBQW33');
+  </script>
+
+  <title>Speaker fingerprinting: how voice AI tells people apart · Nabarun Sarkar</title>
+  <meta name="description" content="How voice AI turns a few seconds of speech into a stable numeric voiceprint: the model lineage from i-vectors to x-vectors and ECAPA-TDNN, how enrollment and scoring work, and where fingerprinting breaks.">
+  <meta name="author" content="Nabarun Sarkar">
+  <link rel="canonical" href="https://nabaruns.com/writing/speaker-fingerprinting.html">
+
+  <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#14130f" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Speaker fingerprinting: how voice AI tells people apart">
+  <meta property="og:description" content="What a voiceprint actually is, the models that learn it, and where speaker fingerprinting breaks.">
+  <meta property="og:url" content="https://nabaruns.com/writing/speaker-fingerprinting.html">
+  <meta property="og:image" content="https://nabaruns.com/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@nbrsr">
+
+  <meta property="article:published_time" content="2026-09-11">
+  <meta property="article:author" content="Nabarun Sarkar">
+  <meta property="article:section" content="Machine learning">
+
+  <link rel="alternate" type="application/atom+xml" title="Writing by Nabarun Sarkar" href="/writing/feed.xml">
+
+  <link rel="preload" href="/fonts/newsreader-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/plexmono-400-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/site.css?v=5">
+  <link rel="stylesheet" href="/css/blog.css?v=5">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Speaker fingerprinting: how voice AI tells people apart",
+    "description": "How voice AI turns a few seconds of speech into a stable numeric voiceprint: the model lineage from i-vectors to x-vectors and ECAPA-TDNN, how enrollment and scoring work, and where fingerprinting breaks.",
+    "url": "https://nabaruns.com/writing/speaker-fingerprinting.html",
+    "mainEntityOfPage": "https://nabaruns.com/writing/speaker-fingerprinting.html",
+    "datePublished": "2026-09-11",
+    "dateModified": "2026-09-11",
+    "image": "https://nabaruns.com/og.png",
+    "author": { "@type": "Person", "name": "Nabarun Sarkar", "url": "https://nabaruns.com/" },
+    "publisher": { "@type": "Person", "name": "Nabarun Sarkar", "url": "https://nabaruns.com/" },
+    "keywords": "speaker fingerprinting, speaker recognition, speaker diarization, speaker verification, voiceprint, speaker embedding, i-vector, d-vector, x-vector, ECAPA-TDNN, GE2E, VoxCeleb, PLDA, ASVspoof, voice AI"
+  }
+  </script>
+</head>
+
+<body>
+
+  <main class="page">
+
+    <a class="backlink" href="/writing/">&larr; Writing</a>
+
+    <article>
+
+      <div class="post-hero" aria-hidden="true">
+        <svg viewBox="0 0 1000 380" role="img" preserveAspectRatio="xMidYMid meet">
+          <!-- baseline -->
+          <line x1="60" y1="330" x2="940" y2="330" stroke="var(--rule)" stroke-width="1"/>
+
+          <!-- audio: a waveform of vertical bars -->
+          <g stroke="var(--ink)" stroke-width="4" stroke-linecap="round">
+            <line x1="80"  y1="170" x2="80"  y2="210"/>
+            <line x1="98"  y1="140" x2="98"  y2="240"/>
+            <line x1="116" y1="120" x2="116" y2="260"/>
+            <line x1="134" y1="158" x2="134" y2="222"/>
+            <line x1="152" y1="96"  x2="152" y2="284"/>
+            <line x1="170" y1="132" x2="170" y2="248"/>
+            <line x1="188" y1="70"  x2="188" y2="310"/>
+            <line x1="206" y1="150" x2="206" y2="230"/>
+            <line x1="224" y1="110" x2="224" y2="270"/>
+            <line x1="242" y1="84"  x2="242" y2="296"/>
+            <line x1="260" y1="146" x2="260" y2="234"/>
+            <line x1="278" y1="122" x2="278" y2="258"/>
+            <line x1="296" y1="164" x2="296" y2="216"/>
+          </g>
+
+          <!-- transform arrow -->
+          <g stroke="var(--accent-soft)" stroke-width="1.5" stroke-dasharray="3 6">
+            <line x1="330" y1="190" x2="404" y2="190"/>
+          </g>
+
+          <!-- the embedding: one fixed-length vector, a few cells lit -->
+          <rect x="414" y="86" width="52" height="208" fill="none" stroke="var(--ink)" stroke-width="2.5"/>
+          <g stroke="var(--ink)" stroke-width="1.2">
+            <line x1="414" y1="112" x2="466" y2="112"/>
+            <line x1="414" y1="138" x2="466" y2="138"/>
+            <line x1="414" y1="164" x2="466" y2="164"/>
+            <line x1="414" y1="190" x2="466" y2="190"/>
+            <line x1="414" y1="216" x2="466" y2="216"/>
+            <line x1="414" y1="242" x2="466" y2="242"/>
+            <line x1="414" y1="268" x2="466" y2="268"/>
+          </g>
+          <g fill="var(--accent)" fill-opacity="0.85">
+            <rect x="414" y="112" width="52" height="26"/>
+            <rect x="414" y="164" width="52" height="26"/>
+            <rect x="414" y="242" width="52" height="26"/>
+          </g>
+
+          <!-- transform arrow -->
+          <g stroke="var(--accent-soft)" stroke-width="1.5" stroke-dasharray="3 6">
+            <line x1="484" y1="190" x2="600" y2="190"/>
+          </g>
+
+          <!-- the voiceprint, drawn as fingerprint ridges -->
+          <g fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round">
+            <path d="M712 300 Q790 150 868 300"/>
+            <path d="M698 306 Q790 128 882 306"/>
+            <path d="M684 312 Q790 106 896 312"/>
+            <path d="M670 318 Q790 84 910 318"/>
+          </g>
+          <!-- fingerprint core -->
+          <path d="M762 250 Q790 208 818 250" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M748 262 Q790 190 832 262" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- minutiae: a couple of ridge endings -->
+          <g fill="var(--accent)">
+            <circle cx="762" cy="250" r="3"/>
+            <circle cx="818" cy="250" r="3"/>
+            <circle cx="790" cy="150" r="3"/>
+          </g>
+        </svg>
+      </div>
+
+      <header class="post-head">
+        <p class="post-meta">
+          <span class="post-badge">Machine learning</span>
+          <span>Explainer</span>
+          <span class="dot">&middot;</span>
+          <span>2026</span>
+          <span class="dot">&middot;</span>
+          <span>6 min read</span>
+        </p>
+        <h1 class="post-title">Speaker fingerprinting: how voice AI tells people apart</h1>
+        <p class="post-standfirst">Ask a voice assistant a question today and it forgets you the moment the call ends. Speaker fingerprinting is how you fix that: turn a few seconds of speech into a stable numeric signature, then recognize the same person days later with no password and no login. AssemblyAI&rsquo;s <a href="https://www.assemblyai.com/blog/speaker-fingerprinting-voice-ai">primer on the topic</a> lays out the idea for product teams. This post fills in the machinery underneath it: what the signature actually is, the models that learn it, and where it breaks.</p>
+      </header>
+
+      <div class="read-aloud" hidden>
+        <button type="button" class="ra-play" aria-pressed="false">
+          <span class="ra-icon" aria-hidden="true">&#9654;</span><span class="ra-label">Listen</span>
+        </button>
+        <button type="button" class="ra-stop" hidden>Stop</button>
+        <button type="button" class="ra-speed" aria-label="Playback speed">1&times;</button>
+        <button type="button" class="draw-clear" hidden>Clear</button>
+      </div>
+
+      <div class="prose">
+
+        <h2 id="print">What a voiceprint actually is</h2>
+        <p>A voiceprint is not a recording. It is a vector: a fixed list of a few hundred numbers that a model produces from your speech. It captures how you sound, not what you said, so the same person reading two different sentences lands at nearly the same point, and two different people land far apart. That distance is the whole trick. Recognition is just measuring how close a new clip sits to a stored one.</p>
+        <p>The raw material is ordinary acoustics. Pitch, or fundamental frequency, sits roughly between 85 and 180 Hz for adult men and 165 to 255 Hz for adult women. Formants are the resonances your vocal tract adds on top, set by the shape of your throat and mouth. Prosody is your rhythm, stress and intonation. Spectral features describe how energy spreads across frequencies. A person is a particular mix of all of these, and a neural network compresses that mix into one vector no matter how long the clip is.</p>
+
+        <h2 id="three">Fingerprinting, diarization and recognition</h2>
+        <p>Three terms get used loosely, and they are not the same job.</p>
+        <p><strong>Diarization</strong> answers &ldquo;who spoke when&rdquo; inside a single recording. It knows nothing about the people in advance and just hands back temporary labels: Speaker A here, Speaker B there. Open-source tools like <a href="https://arxiv.org/abs/1911.01255">pyannote.audio</a> (2020) do this by segmenting the audio, embedding each segment, and clustering the embeddings. The labels mean nothing once the file ends.</p>
+        <p><strong>Recognition</strong> ties a voice to a known identity, and splits in two. Verification is one-to-one: is this the person they claim to be? Identification is one-to-many: which of my enrolled users is this? <strong>Fingerprinting</strong> is the persistent version of recognition: enroll a person once, then recognize them across future sessions. The step that separates it from diarization is enrollment, the moment you attach a name to a print and save it.</p>
+
+        <h2 id="embeddings">The models that learn the embedding</h2>
+        <p>Everything above depends on one component: the thing that turns variable-length audio into a single fixed vector. Its history is short and worth knowing, because the lineage is still visible in production systems.</p>
+        <p>Before deep learning there were <a href="https://sls.csail.mit.edu/publications/2011/Dehak_IEEE_May2011.pdf">i-vectors</a> (Dehak et al., 2011). The idea was to model both speaker and channel variation in one low-dimensional &ldquo;total variability&rdquo; space using factor analysis over Gaussian mixtures, then represent a whole utterance as one compact vector and score two of them with cosine similarity or PLDA. That template, any-length audio to one fixed vector scored by distance, is exactly what the neural models kept.</p>
+        <p>Google replaced the statistics with a network. Its <strong>d-vectors</strong> come from a neural net trained to output speaker embeddings directly, and the <a href="https://arxiv.org/abs/1710.10467">generalized end-to-end loss</a> (2018) sharpened the training: pull clips from the same speaker together, push different speakers apart, and weight the hard cases. It cut error by more than 10% and training time by 60%, and it is the technique behind Voice Match on Google Home.</p>
+        <p><a href="https://www.danielpovey.com/files/2018_icassp_xvectors.pdf"><strong>X-vectors</strong></a> (Snyder et al., 2018) became the standard baseline. A time-delay network processes the frames, a statistics-pooling layer averages across the whole utterance to get a single vector, and heavy augmentation with added noise and reverberation makes it robust to messy audio. <a href="https://arxiv.org/abs/2005.07143"><strong>ECAPA-TDNN</strong></a> (Desplanques et al., 2020) is the current workhorse. It adds channel attention, Res2Net blocks and squeeze-and-excitation, and lets the pooling layer attend to the most informative frames, which dropped error rates sharply on standard tests.</p>
+        <p>Those tests almost always run on <a href="https://arxiv.org/abs/1706.08612">VoxCeleb</a> (Nagrani et al., 2017): hundreds of thousands of utterances from over a thousand speakers, scraped from YouTube interviews so the audio is genuinely &ldquo;in the wild&rdquo; rather than recorded in a booth. It is the dataset that made robust, text-independent embeddings trainable at scale.</p>
+
+        <h2 id="match">Enrollment, scoring and the threshold</h2>
+        <p>Enrollment builds the reference. You collect a bit of speech and average the embeddings into one voiceprint. AssemblyAI&rsquo;s rule of thumb is 30 to 60 seconds spread across several utterances for a good enrollment, then 2 to 3 seconds of speech to identify someone against it, with a real-time target near 500 milliseconds so an agent can react mid-conversation.</p>
+        <p>At runtime the system embeds the new audio, scores it against the stored prints, usually with cosine similarity, and gets a number between 0 and 1. Then it compares that number to a threshold. The threshold is the real design decision, because it sets the balance between two mistakes: a false accept lets the wrong person through, a false reject turns the right person away. The point where those two rates are equal is the equal error rate, the single number every paper above reports. Lower the threshold and you reject fewer real users but wave through more imposters; raise it and you do the reverse.</p>
+
+        <h2 id="use">Where it gets used</h2>
+        <p>The product cases fall into three groups. <strong>Personalized agents</strong> recognize a returning caller with no login, or greet each family member differently on a shared smart speaker; Voice Match on Google&rsquo;s assistants is the mass-market example. <strong>Conversation analytics</strong> track a known speaker across many sessions to measure participation, follow sentiment over time, or flag coaching moments. <strong>Contact centers</strong> identify callers automatically, route VIPs, and raise a flag when a voice does not match the account it claims.</p>
+
+        <h2 id="limits">Where it breaks</h2>
+        <p>The failure modes are consistent, and worth stating plainly before you build on any of this.</p>
+        <p><strong>Audio quality.</strong> Background noise corrupts the very features the model reads. Phone codecs throw away high frequencies. A different microphone shifts the print. All of it degrades the match.</p>
+        <p><strong>Overlap and scale.</strong> When two people talk at once there is no clean signal to embed for either. And accuracy falls as the enrolled population grows, because more stored prints mean more chances for a stranger to sit close to someone real.</p>
+        <p><strong>Voice drift.</strong> Illness, emotion and stress move your voice from one day to the next. Aging moves it over years. Prints go stale, so serious systems re-enroll people periodically.</p>
+        <p><strong>Spoofing.</strong> This is the one that matters most. A voiceprint is not a secret; your voice is public, and modern text-to-speech and voice conversion can clone it from seconds of audio. That is why verification systems need a separate anti-spoofing layer. The <a href="https://arxiv.org/abs/1911.01601">ASVspoof</a> challenge series benchmarks exactly this, covering synthesized, converted and replayed speech. The practical takeaway: treat voice as a convenience factor, not a standalone credential.</p>
+
+        <p>The arc mirrors face and fingerprint biometrics. A hand-built statistical model gave way to a learned embedding, trained on a large in-the-wild dataset and scored by distance. It works well enough to recognize a returning caller in half a second, and poorly enough that you should not guard a bank account with it alone.</p>
+
+      </div>
+
+    </article>
+
+    <nav class="toc" aria-label="On this page">
+      <p class="toc-title">On this page</p>
+      <ol>
+        <li><a href="#print">What a voiceprint is</a></li>
+        <li><a href="#three">Fingerprint, diarize, verify</a></li>
+        <li><a href="#embeddings">The models</a></li>
+        <li><a href="#match">Enrollment and scoring</a></li>
+        <li><a href="#use">Where it is used</a></li>
+        <li><a href="#limits">Where it breaks</a></li>
+      </ol>
+    </nav>
+
+    <footer class="colophon">
+      <p>Each linked title goes to the paper or the source. Summaries and numbers are drawn from those sources.</p>
+    </footer>
+
+  </main>
+
+  <script src="/js/site.js?v=6" defer></script>
+  <script src="/js/blog.js?v=2" defer></script>
+  <script src="/js/read-aloud.js?v=1" defer></script>
+
+</body>
+
+</html>

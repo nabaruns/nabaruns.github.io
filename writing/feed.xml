@@ -5,11 +5,21 @@
   <link href="https://nabaruns.com/writing/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="https://nabaruns.com/writing/" rel="alternate" type="text/html"/>
   <id>https://nabaruns.com/writing/</id>
-  <updated>2026-09-10T00:00:00Z</updated>
+  <updated>2026-09-11T00:00:00Z</updated>
   <author>
     <name>Nabarun Sarkar</name>
     <uri>https://nabaruns.com/</uri>
   </author>
+
+  <entry>
+    <title>Speaker fingerprinting: how voice AI tells people apart</title>
+    <link href="https://nabaruns.com/writing/speaker-fingerprinting.html" rel="alternate" type="text/html"/>
+    <id>https://nabaruns.com/writing/speaker-fingerprinting.html</id>
+    <published>2026-09-11T00:00:00Z</published>
+    <updated>2026-09-11T00:00:00Z</updated>
+    <category term="Machine learning"/>
+    <summary>What a voiceprint actually is, the model lineage that produces it (i-vectors, d-vectors, x-vectors, ECAPA-TDNN, trained on VoxCeleb), how enrollment and scoring work, and where fingerprinting breaks, including spoofing.</summary>
+  </entry>
 
   <entry>
     <title>The KV cache and the long-context race</title>
