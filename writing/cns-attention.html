@@ -31,7 +31,7 @@
   <link rel="preload" href="/fonts/newsreader-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/plexmono-400-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/site.css?v=5">
-  <link rel="stylesheet" href="/css/blog.css?v=3">
+  <link rel="stylesheet" href="/css/blog.css?v=4">
 
   <script type="application/ld+json">
   {
@@ -127,6 +127,14 @@
         <p class="post-standfirst">Sridharan Devarajan&rsquo;s <a href="https://cns.iisc.ac.in/sridhar/">Cognition, Computation and Behavior Lab</a> at IISc studies how the brain decides what to attend to, with fMRI, EEG, TMS and primate electrophysiology, and builds deep-learning models for medical imaging with Google Research. It is also the lab I spent a year in, working on brain-age estimation from MRI. Here are the seven selected papers from his profile, summarized and linked.</p>
       </header>
 
+      <div class="read-aloud" hidden>
+        <button type="button" class="ra-play" aria-pressed="false">
+          <span class="ra-icon" aria-hidden="true">&#9654;</span><span class="ra-label">Listen</span>
+        </button>
+        <button type="button" class="ra-stop" hidden>Stop</button>
+        <button type="button" class="ra-speed" aria-label="Playback speed">1&times;</button>
+      </div>
+
       <div class="prose">
 
         <p>One idea runs through most of this work. A behavioural response, deciding whether a target was there, can be split into two independent quantities: perceptual <em>sensitivity</em>, how well you actually saw it, and choice <em>bias</em>, how willing you were to say yes. The lab uses signal detection theory to pull these apart, then asks which one attention, expectation or reward is really moving, and where in the brain each lives. The answers turn out to be surprisingly separable.</p>
@@ -201,6 +209,7 @@
 
   <script src="/js/site.js?v=6" defer></script>
   <script src="/js/blog.js?v=2" defer></script>
+  <script src="/js/read-aloud.js?v=1" defer></script>
 
 </body>
 

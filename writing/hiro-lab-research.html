@@ -31,7 +31,7 @@
   <link rel="preload" href="/fonts/newsreader-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/plexmono-400-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/site.css?v=5">
-  <link rel="stylesheet" href="/css/blog.css?v=3">
+  <link rel="stylesheet" href="/css/blog.css?v=4">
 
   <script type="application/ld+json">
   {
@@ -142,6 +142,14 @@
         <h1 class="post-title">The HiRo Lab reading list: robots that learn from people</h1>
         <p class="post-standfirst">IISc&rsquo;s <a href="https://hiro.cps.iisc.ac.in/research/">HiRo Lab</a> works on the theory and the algorithms that let robots learn from, adapt to, and collaborate with people in messy real-world settings. Their research page reads like a map of that problem. Here is a summary of every paper on it, grouped by the five threads they pull on.</p>
       </header>
+
+      <div class="read-aloud" hidden>
+        <button type="button" class="ra-play" aria-pressed="false">
+          <span class="ra-icon" aria-hidden="true">&#9654;</span><span class="ra-label">Listen</span>
+        </button>
+        <button type="button" class="ra-stop" hidden>Stop</button>
+        <button type="button" class="ra-speed" aria-label="Playback speed">1&times;</button>
+      </div>
 
       <div class="prose">
 
@@ -267,6 +275,7 @@
 
   <script src="/js/site.js?v=6" defer></script>
   <script src="/js/blog.js?v=2" defer></script>
+  <script src="/js/read-aloud.js?v=1" defer></script>
 
 </body>
 

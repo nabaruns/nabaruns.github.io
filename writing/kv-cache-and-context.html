@@ -31,7 +31,7 @@
   <link rel="preload" href="/fonts/newsreader-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/plexmono-400-latin.woff2?v=5" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/css/site.css?v=5">
-  <link rel="stylesheet" href="/css/blog.css?v=3">
+  <link rel="stylesheet" href="/css/blog.css?v=4">
 
   <script type="application/ld+json">
   {
@@ -121,6 +121,14 @@
         <h1 class="post-title">The KV cache and the long-context race</h1>
         <p class="post-standfirst">A transformer re-reads everything it has written so far to produce each next token. The KV cache is the trick that makes that affordable, and the reason a long prompt is expensive. Here is the history of that one data structure: where it came from, the papers that shrank it, and how context windows grew from about 2,000 tokens to a million.</p>
       </header>
+
+      <div class="read-aloud" hidden>
+        <button type="button" class="ra-play" aria-pressed="false">
+          <span class="ra-icon" aria-hidden="true">&#9654;</span><span class="ra-label">Listen</span>
+        </button>
+        <button type="button" class="ra-stop" hidden>Stop</button>
+        <button type="button" class="ra-speed" aria-label="Playback speed">1&times;</button>
+      </div>
 
       <div class="prose">
 
@@ -227,6 +235,7 @@
 
   <script src="/js/site.js?v=6" defer></script>
   <script src="/js/blog.js?v=2" defer></script>
+  <script src="/js/read-aloud.js?v=1" defer></script>
 
 </body>
 
